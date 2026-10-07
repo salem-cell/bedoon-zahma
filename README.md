@@ -1,4 +1,4 @@
-# بدون زحمة — Bedoon Zahma
+# مشوارك أسهل — Mishwarak Ashal
 
 **«اختر كيف تبي توصل»**
 

@@ -5,7 +5,7 @@ import Networking
 import FoundationNetworking
 #endif
 
-/// إعدادات الاتصال بالخادم الخلفي («بدون زحمة» Backend) الذي يحمل مفاتيح Google الخادمية.
+/// إعدادات الاتصال بالخادم الخلفي («مشوارك أسهل» Backend) الذي يحمل مفاتيح Google الخادمية.
 public struct BackendConfiguration: Sendable {
     public var baseURL: URL
     /// مفتاح تطبيق بسيط لتقييد الوصول (يُستبدل/يُعزَّز بـ App Attest لاحقًا).

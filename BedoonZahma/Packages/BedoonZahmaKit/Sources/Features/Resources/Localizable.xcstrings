@@ -2,7 +2,7 @@
   "sourceLanguage" : "ar",
   "version" : "1.0",
   "strings" : {
-    "app.name" : { "localizations" : { "ar" : { "stringUnit" : { "state" : "translated", "value" : "بدون زحمة" } }, "en" : { "stringUnit" : { "state" : "translated", "value" : "Bedoon Zahma" } } } },
+    "app.name" : { "localizations" : { "ar" : { "stringUnit" : { "state" : "translated", "value" : "مشوارك أسهل" } }, "en" : { "stringUnit" : { "state" : "translated", "value" : "Mishwarak Ashal" } } } },
     "app.tagline" : { "localizations" : { "ar" : { "stringUnit" : { "state" : "translated", "value" : "اختر كيف تبي توصل" } }, "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose how you get there" } } } },
     "dev.badge" : { "localizations" : { "ar" : { "stringUnit" : { "state" : "translated", "value" : "بيانات تجريبية" } }, "en" : { "stringUnit" : { "state" : "translated", "value" : "DEV DATA" } } } },
     "common.back" : { "localizations" : { "ar" : { "stringUnit" : { "state" : "translated", "value" : "رجوع" } }, "en" : { "stringUnit" : { "state" : "translated", "value" : "Back" } } } },

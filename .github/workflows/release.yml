@@ -10,7 +10,7 @@
 #   BZ_APP_KEY          مفتاح التطبيق للخادم الخلفي
 #   BZ_BACKEND_URL      رابط الخادم الخلفي HTTPS (مثل https://api.bedoonzahma.sa)
 #
-# يجب أن يكون التطبيق مُنشأً في App Store Connect بـ Bundle ID: sa.bedoonzahma.app
+# يجب أن يكون التطبيق مُنشأً في App Store Connect بـ Bundle ID: sa.mishwarak.app
 name: Release to TestFlight
 
 on:

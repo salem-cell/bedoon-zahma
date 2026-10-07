@@ -1,7 +1,7 @@
 # جاهزية App Store — قائمة التحقق
 
 ## مفاتيح وأمان
-- [ ] مفتاح iOS (`GOOGLE_MAPS_IOS_KEY`) مقيّد بـ Bundle ID `sa.bedoonzahma.app` وبـ Maps SDK + Navigation SDK فقط.
+- [ ] مفتاح iOS (`GOOGLE_MAPS_IOS_KEY`) مقيّد بـ Bundle ID `sa.mishwarak.app` وبـ Maps SDK + Navigation SDK فقط.
 - [ ] مفتاح الخادم مقيّد بـ IP وبـ Routes API + Places API (New) فقط، ومخزّن في Secret Manager/متغيرات البيئة.
 - [ ] `Secrets.xcconfig` و`backend/.env` خارج git (مضبوط في `.gitignore`).
 - [ ] `BZ_USE_MOCKS=0` في Release (مفروض بالكود أيضًا: Mocks تعمل في DEBUG فقط).

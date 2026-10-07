@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// هوية «بدون زحمة» — اتجاه «بوابة الوصول»: أخضر المسار، سماء، برتقالي للتنبيهات، ليل للنص.
+/// هوية «مشوارك أسهل» — اتجاه «بوابة الوصول»: أخضر المسار، سماء، برتقالي للتنبيهات، ليل للنص.
 public enum BZColor {
     public static let green = Color(hex: 0x15B98F)
     public static let greenDark = Color(hex: 0x0E8F6E)

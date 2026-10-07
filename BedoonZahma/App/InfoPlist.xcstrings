@@ -2,7 +2,7 @@
   "sourceLanguage" : "ar",
   "version" : "1.0",
   "strings" : {
-    "CFBundleDisplayName" : { "localizations" : { "ar" : { "stringUnit" : { "state" : "translated", "value" : "بدون زحمة" } }, "en" : { "stringUnit" : { "state" : "translated", "value" : "Bedoon Zahma" } } } },
+    "CFBundleDisplayName" : { "localizations" : { "ar" : { "stringUnit" : { "state" : "translated", "value" : "مشوارك أسهل" } }, "en" : { "stringUnit" : { "state" : "translated", "value" : "Mishwarak Ashal" } } } },
     "NSLocationWhenInUseUsageDescription" : { "localizations" : {
       "ar" : { "stringUnit" : { "state" : "translated", "value" : "نستخدم موقعك أثناء استخدام التطبيق فقط لحساب الطرق وإظهار الأماكن التي تصل إليها خلال دقائق. لا نخزّن سجل مواقعك." } },
       "en" : { "stringUnit" : { "state" : "translated", "value" : "We use your location only while the app is open to compute routes and show places you can reach in minutes. We never store your location history." } } } }

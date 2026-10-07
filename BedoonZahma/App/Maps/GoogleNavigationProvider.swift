@@ -43,7 +43,7 @@ final class GoogleNavigationProvider: NSObject, NavigationProvider, GMSNavigator
     private func ensureTerms() async -> Bool {
         if termsAccepted { return true }
         return await withCheckedContinuation { c in
-            let options = GMSNavigationTermsAndConditionsOptions(companyName: "بدون زحمة")
+            let options = GMSNavigationTermsAndConditionsOptions(companyName: "مشوارك أسهل")
             GMSNavigationServices.showTermsAndConditionsDialogIfNeeded(with: options) { accepted in
                 c.resume(returning: accepted)
             }

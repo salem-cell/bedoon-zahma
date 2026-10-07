@@ -1,7 +1,7 @@
 # XcodeGen spec — على Mac: `brew install xcodegen && xcodegen generate` ثم افتح BedoonZahma.xcodeproj
 name: BedoonZahma
 options:
-  bundleIdPrefix: sa.bedoonzahma
+  bundleIdPrefix: sa.mishwarak
   deploymentTarget:
     iOS: "17.0"
   xcodeVersion: "26.0"
@@ -37,7 +37,7 @@ targets:
     info:
       path: App/Info.plist
       properties:
-        CFBundleDisplayName: بدون زحمة
+        CFBundleDisplayName: مشوارك أسهل
         CFBundleName: BedoonZahma
         CFBundleShortVersionString: "1.0.0"
         CFBundleVersion: "1"
@@ -48,6 +48,8 @@ targets:
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIApplicationSceneManifest: { UIApplicationSupportsMultipleScenes: false }
         ITSAppUsesNonExemptEncryption: false
+        # خط الهوية (Noto Kufi Arabic — رخصة OFL، الملف في App/Fonts ويُنسخ إلى جذر الحزمة)
+        UIAppFonts: [NotoKufiArabic-Variable.ttf]
         NSLocationWhenInUseUsageDescription: "نستخدم موقعك أثناء استخدام التطبيق فقط لحساب الطرق وإظهار الأماكن التي تصل إليها خلال دقائق. لا نخزّن سجل مواقعك."
         UIBackgroundModes: [location, audio]
         # NSAllowsLocalNetworking يسمح بـ http://127.0.0.1 للخادم المحلي في التطوير فقط؛ الإنتاج HTTPS.
@@ -69,6 +71,7 @@ targets:
         product: GoogleMaps
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: sa.mishwarak.app
         SWIFT_VERSION: "5.10"
         SWIFT_STRICT_CONCURRENCY: minimal
         TARGETED_DEVICE_FAMILY: "1"

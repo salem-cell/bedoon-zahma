@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "خادم «بدون زحمة» الخفيف: يحمل مفاتيح Google الخادمية، ويفرض أقنعة الحقول والحدود، ويقدّم Remote Config والتحليلات والمقاييس.",
+  "description": "خادم «مشوارك أسهل» الخفيف: يحمل مفاتيح Google الخادمية، ويفرض أقنعة الحقول والحدود، ويقدّم Remote Config والتحليلات والمقاييس.",
   "engines": { "node": ">=20" },
   "scripts": {
     "dev": "tsx watch src/server.ts",
