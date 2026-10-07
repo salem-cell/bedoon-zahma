@@ -1,0 +1,33 @@
+{
+  "results": [
+    {
+      "type": "POI",
+      "id": "tt-poi-1",
+      "dist": 1712.4,
+      "poi": {
+        "name": "محمصة سدر",
+        "phone": "+966 11 000 0000",
+        "url": "sidr.coffee",
+        "categorySet": [ { "id": 9376002 } ],
+        "categories": [ "coffee shop", "café/pub" ],
+        "classifications": [ { "code": "CAFE_PUB", "names": [ { "nameLocale": "en-US", "name": "coffee shop" }, { "nameLocale": "en-US", "name": "café/pub" } ] } ],
+        "openingHours": { "mode": "nextSevenDays", "timeRanges": [ { "startTime": { "date": "2020-01-01", "hour": 0, "minute": 0 }, "endTime": { "date": "2099-12-31", "hour": 23, "minute": 59 } } ] }
+      },
+      "address": { "streetName": "طريق الأمير تركي", "municipalitySubdivision": "حطين", "municipality": "الرياض", "freeformAddress": "طريق الأمير تركي، حطين، الرياض" },
+      "position": { "lat": 24.7705, "lon": 46.621 },
+      "dataSources": { "poiDetails": [ { "id": "pd-1" } ] }
+    },
+    {
+      "type": "POI",
+      "id": "tt-poi-2",
+      "dist": 4600.0,
+      "poi": {
+        "name": "شاورما الخال",
+        "categorySet": [ { "id": 7315 } ],
+        "classifications": [ { "code": "RESTAURANT", "names": [ { "nameLocale": "en-US", "name": "restaurant" }, { "nameLocale": "en-US", "name": "middle eastern" } ] } ]
+      },
+      "address": { "municipalitySubdivision": "العقيق", "municipality": "الرياض", "freeformAddress": "العقيق، الرياض" },
+      "position": { "lat": 24.752, "lon": 46.635 }
+    }
+  ]
+}

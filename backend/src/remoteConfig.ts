@@ -51,6 +51,8 @@ export const DEFAULT_CONFIG = {
     atmosphereFieldsEnabled: true,
   },
   searchRegionCodes: ["sa"],
+  /** المزوّد النشط: tomtom (مجاني) أو google. التطبيق يختار المزوّد وقت الإقلاع من إعداد البناء، وهذا للمراقبة والتبديل لاحقًا. */
+  mapsProvider: "tomtom" as "tomtom" | "google",
 };
 
 export type RemoteConfig = typeof DEFAULT_CONFIG;
@@ -68,11 +70,11 @@ function deepMerge<T extends Record<string, unknown>>(base: T, patch: Record<str
   return out as T;
 }
 
-export function buildRemoteConfig(overridesPath?: string): { config: RemoteConfig; etag: string; body: string } {
-  let config: RemoteConfig = DEFAULT_CONFIG;
+export function buildRemoteConfig(overridesPath?: string, envPatch: Partial<RemoteConfig> = {}): { config: RemoteConfig; etag: string; body: string } {
+  let config: RemoteConfig = deepMerge(DEFAULT_CONFIG as unknown as Record<string, unknown>, envPatch as Record<string, unknown>) as unknown as RemoteConfig;
   if (overridesPath) {
     const patch = JSON.parse(readFileSync(overridesPath, "utf8")) as Record<string, unknown>;
-    config = deepMerge(DEFAULT_CONFIG as unknown as Record<string, unknown>, patch) as unknown as RemoteConfig;
+    config = deepMerge(config as unknown as Record<string, unknown>, patch) as unknown as RemoteConfig;
   }
   const body = JSON.stringify(config);
   const etag = `"${createHash("sha256").update(body).digest("hex").slice(0, 16)}"`;

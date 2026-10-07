@@ -78,6 +78,43 @@ public final class BackendAPI: Sendable {
         ])
     }
 
+    // MARK: TomTom (المزوّد المجاني الافتراضي)
+
+    public func ttRoutes(_ body: TTRoutesRequest) async throws -> TTRoutesBundle {
+        let r = try URLRequest.json(url: url("v1/tt/routes"), body: body, headers: headers)
+        return try await http.json(r, endpoint: "tt.routes", as: TTRoutesBundle.self)
+    }
+
+    public func ttMatrix(_ body: TTMatrixRequest) async throws -> TTMatrixResponse {
+        let r = try URLRequest.json(url: url("v1/tt/matrix"), body: body, headers: headers)
+        return try await http.json(r, endpoint: "tt.matrix", as: TTMatrixResponse.self)
+    }
+
+    public func ttNearby(_ body: TTNearbyRequest) async throws -> TTSearchResponse {
+        let r = try URLRequest.json(url: url("v1/tt/nearby"), body: body, headers: headers)
+        return try await http.json(r, endpoint: "tt.nearby", as: TTSearchResponse.self)
+    }
+
+    public func ttSearch(_ body: TTSearchTextRequest) async throws -> TTSearchResponse {
+        let r = try URLRequest.json(url: url("v1/tt/search"), body: body, headers: headers)
+        return try await http.json(r, endpoint: "tt.search", as: TTSearchResponse.self)
+    }
+
+    public func ttPlace(id: String, languageCode: String, withDetails: Bool) async throws -> TTPlaceBundle {
+        let q = [URLQueryItem(name: "languageCode", value: languageCode), URLQueryItem(name: "details", value: withDetails ? "1" : "0")]
+        let r = try URLRequest.json(url: url("v1/tt/place/\(id)", query: q), method: "GET", headers: headers)
+        return try await http.json(r, endpoint: "tt.place", as: TTPlaceBundle.self)
+    }
+
+    public func ttPhotoURL(id: String, width: Int, height: Int) -> URL {
+        url("v1/tt/photo", query: [
+            URLQueryItem(name: "id", value: id),
+            URLQueryItem(name: "width", value: String(width)),
+            URLQueryItem(name: "height", value: String(height)),
+            URLQueryItem(name: "k", value: config.appKey),
+        ])
+    }
+
     // MARK: Config & Analytics
 
     public func fetchRemoteConfig(etag: String?) async throws -> (data: Data?, etag: String?) {

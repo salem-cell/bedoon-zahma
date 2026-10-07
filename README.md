@@ -2,7 +2,7 @@
 
 **«اختر كيف تبي توصل»**
 
-تطبيق iPhone أصلي (Swift / SwiftUI) فوق Google Maps Platform يجيب سؤالين:
+تطبيق iPhone أصلي (Swift / SwiftUI) فوق مزوّد خرائط قابل للتبديل — **TomTom (مجاني بلا بطاقة) + Apple MapKit** افتراضيًا، وGoogle Maps Platform اختياريًا — يجيب سؤالين:
 
 1. **كيف أبي أوصل؟** → 🟢 بدون توقف · ⚡ أسرع طريق · 📏 أقصر طريق
 2. **وين أبي أروح حولي؟** → ☕ مقاهيي · 🍽️ مطاعمي خلال ≤5 / ≤10 / ≤15 دقيقة **بوقت القيادة الفعلي**
@@ -47,6 +47,19 @@ cd BedoonZahma/Packages/BedoonZahmaKit && swift test
 ```bash
 powershell -File scripts/test-kit-windows.ps1
 ```
+
+## المزوّدان
+
+| | TomTom + MapKit (الافتراضي، مجاني) | Google Maps Platform (اختياري) |
+|---|---|---|
+| الخريطة | Apple MapKit، بلا مفتاح | Maps SDK for iOS |
+| الطرق والمرور | Routing API: مدة بالمرور وبدونه، تأخير، أقسام مرور بدرجة شدة، حوادث وأعمال طرق | Routes API: speedReadingIntervals |
+| الأماكن | Search API (100 نتيجة/طلب، عربي) + POI Details (تقييم، سعر، صور) | Places API (New) |
+| ETA للقوائم | طلبات توجيه ملخّصة أو Matrix v2 | routingSummaries + Route Matrix |
+| الملاحة | إرشاد ذاتي فوق MapKit بصوت عربي وإعادة توجيه | Navigation SDK |
+| الحصة المجانية | توجيه 20K/شهر، بحث 2.5K/شهر، بلا بطاقة | يتطلب فوترة |
+
+التبديل عبر `BZ_MAPS_PROVIDER` في `Config/*.xcconfig` و`MAPS_PROVIDER` على الخادم.
 
 ## كيف تعمل الميزات الأساسية
 

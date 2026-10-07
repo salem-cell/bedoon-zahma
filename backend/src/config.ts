@@ -4,8 +4,14 @@ const Env = z.object({
   PORT: z.coerce.number().default(8080),
   HOST: z.string().default("0.0.0.0"),
   LOG_LEVEL: z.string().default("info"),
-  /** مفتاح Google خادمي: مقيّد بـ IP الخادم + APIs: Routes API, Places API (New) فقط. */
-  GOOGLE_SERVER_API_KEY: z.string().min(10),
+  /** مفتاح Google خادمي: مقيّد بـ IP الخادم + APIs: Routes API, Places API (New) فقط. اختياري عند استخدام TomTom. */
+  GOOGLE_SERVER_API_KEY: z.string().min(10).default("GOOGLE_NOT_CONFIGURED"),
+  /** مفتاح TomTom (الخطة المجانية بلا بطاقة). */
+  TOMTOM_API_KEY: z.string().min(10).optional(),
+  /** المزوّد الافتراضي الذي يعلنه /v1/config للتطبيق. */
+  MAPS_PROVIDER: z.enum(["tomtom", "google"]).default("tomtom"),
+  /** حساب ETA لعدة وجهات مع TomTom: routes = طلب توجيه ملخّص لكل وجهة (يوفّر حصة المصفوفة)، matrix = Matrix v2. */
+  TRAVEL_TIME_MODE: z.enum(["routes", "matrix"]).default("routes"),
   /** مفاتيح التطبيق المقبولة (X-App-Key)، مفصولة بفواصل. */
   APP_KEYS: z.string().default(""),
   /** للتطوير المحلي فقط. */

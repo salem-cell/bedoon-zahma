@@ -25,9 +25,26 @@ function app() {
   return { app: buildApp(cfg, { google, metrics }), google };
 }
 
+describe("tomtom validation", () => {
+  it("يرفض مصفوفة بأكثر من 100 وجهة ويقبل الطلبات الصالحة", async () => {
+    const { TTMatrixBody, TTNearbyBody, TTRoutesBody } = await import("../src/tomtom.js");
+    const p = { latitude: 24.7, longitude: 46.6 };
+    expect(() => TTMatrixBody.parse({ origin: p, destinations: Array.from({ length: 101 }, () => p) })).toThrow();
+    expect(() => TTNearbyBody.parse({ center: p, radiusMeters: 5000, categorySet: [7315, 9376] })).not.toThrow();
+    expect(TTRoutesBody.parse({ origin: p, destination: p }).maxAlternatives).toBe(3);
+  });
+
+  it("يرد 503 واضحًا عندما لا يوجد مفتاح TomTom", async () => {
+    const { app: a } = app();
+    const r = await a.inject({ method: "POST", url: "/v1/tt/routes", headers: { "x-app-key": "k1" }, payload: { origin: { latitude: 24.7, longitude: 46.6 }, destination: { latitude: 24.8, longitude: 46.7 } } });
+    expect(r.statusCode).toBe(502);
+    expect(r.json().upstreamStatus).toBe(503);
+  });
+});
+
 describe("remote config", () => {
   it("يطابق مفاتيح AppRemoteConfig في Swift", () => {
-    expect(Object.keys(DEFAULT_CONFIG).sort()).toEqual(["flags", "nearby", "rankingWeights", "rerouteThresholds", "searchRegionCodes", "trafficWeights", "version"]);
+    expect(Object.keys(DEFAULT_CONFIG).sort()).toEqual(["flags", "mapsProvider", "nearby", "rankingWeights", "rerouteThresholds", "searchRegionCodes", "trafficWeights", "version"]);
     expect(Object.keys(DEFAULT_CONFIG.trafficWeights)).toEqual([
       "delayPerMinute", "jamPerKm", "slowPerKm", "stopAndGoPerJamSegment", "incidentPenalty", "turnPenalty", "uTurnPenalty",
       "extraDistancePerKm", "warningPenalty", "missingTrafficDataPenalty", "maxDetourDurationRatio", "maxDetourDistanceRatio",

@@ -59,12 +59,13 @@ targets:
         BZBackendURL: $(BZ_BACKEND_URL)
         BZAppKey: $(BZ_APP_KEY)
         BZUseMocks: $(BZ_USE_MOCKS)
+        BZMapsProvider: $(BZ_MAPS_PROVIDER)
     entitlements:
       path: App/BedoonZahma.entitlements
       properties: {}
     dependencies:
       - package: BedoonZahmaKit
-        products: [Domain, Features, GoogleProviders, DevMocks, Location, Storage, Analytics, RemoteConfig, BackendClient, Networking, TrafficEngine, PlaceRanking, NearbyDiscovery, DesignSystem]
+        products: [Domain, Features, GoogleProviders, TomTomProviders, DevMocks, Location, Storage, Analytics, RemoteConfig, BackendClient, Networking, TrafficEngine, PlaceRanking, NearbyDiscovery, DesignSystem]
       - package: GoogleNavigation
         product: GoogleNavigation
       - package: GoogleMaps

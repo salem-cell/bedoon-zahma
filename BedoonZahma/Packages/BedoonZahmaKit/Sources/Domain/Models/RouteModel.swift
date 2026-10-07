@@ -65,11 +65,20 @@ public struct RouteStep: Codable, Hashable, Sendable {
     public var maneuver: Maneuver?
     public var distanceMeters: Int
     public var staticDurationSeconds: Int?
-    public init(instruction: String?, maneuver: Maneuver?, distanceMeters: Int, staticDurationSeconds: Int?) {
+    /// موضع المناورة على المسار (للإرشاد الذاتي): المسافة من بداية المسار، وفهرس النقطة، والإحداثية.
+    public var routeOffsetMeters: Int?
+    public var pointIndex: Int?
+    public var coordinate: Coordinate?
+    public var streetName: String?
+    public init(instruction: String?, maneuver: Maneuver?, distanceMeters: Int, staticDurationSeconds: Int?, routeOffsetMeters: Int? = nil, pointIndex: Int? = nil, coordinate: Coordinate? = nil, streetName: String? = nil) {
         self.instruction = instruction
         self.maneuver = maneuver
         self.distanceMeters = distanceMeters
         self.staticDurationSeconds = staticDurationSeconds
+        self.routeOffsetMeters = routeOffsetMeters
+        self.pointIndex = pointIndex
+        self.coordinate = coordinate
+        self.streetName = streetName
     }
 }
 

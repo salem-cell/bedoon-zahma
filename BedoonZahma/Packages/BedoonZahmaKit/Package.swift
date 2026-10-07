@@ -14,6 +14,7 @@ var products: [Product] = [
     .library(name: "Networking", targets: ["Networking"]),
     .library(name: "BackendClient", targets: ["BackendClient"]),
     .library(name: "GoogleProviders", targets: ["GoogleProviders"]),
+    .library(name: "TomTomProviders", targets: ["TomTomProviders"]),
     .library(name: "DevMocks", targets: ["DevMocks"]),
     .library(name: "Storage", targets: ["Storage"]),
     .library(name: "Analytics", targets: ["Analytics"]),
@@ -27,6 +28,7 @@ var targets: [Target] = [
     .target(name: "Networking", dependencies: ["Domain"]),
     .target(name: "BackendClient", dependencies: ["Domain", "Networking"]),
     .target(name: "GoogleProviders", dependencies: ["Domain", "BackendClient", "Networking"]),
+    .target(name: "TomTomProviders", dependencies: ["Domain", "BackendClient", "Networking"]),
     .target(name: "NearbyDiscovery", dependencies: ["Domain", "PlaceRanking"]),
     .target(name: "DevMocks", dependencies: ["Domain"]),
     .target(name: "Storage", dependencies: ["Domain"]),
@@ -38,6 +40,11 @@ var targets: [Target] = [
     .testTarget(
         name: "GoogleProvidersTests",
         dependencies: ["GoogleProviders", "BackendClient", "Domain"],
+        resources: [.copy("Fixtures")]
+    ),
+    .testTarget(
+        name: "TomTomProvidersTests",
+        dependencies: ["TomTomProviders", "BackendClient", "Domain", "TrafficEngine"],
         resources: [.copy("Fixtures")]
     ),
 ]

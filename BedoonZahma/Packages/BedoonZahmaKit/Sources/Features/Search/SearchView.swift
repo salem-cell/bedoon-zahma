@@ -58,7 +58,8 @@ final class SearchViewModel {
         await env.recents.add(RecentSearch(placeID: s.placeID, displayName: s.mainText, secondaryText: s.secondaryText))
         let token = sessionToken
         sessionToken = UUID().uuidString
-        let coord = try? await env.places.placeDetails(placeID: s.placeID, level: .basic, languageCode: env.languageCode, sessionToken: token).coordinate
+        // TomTom يعطي الإحداثية مع الاقتراح؛ Google يحتاج Place Details (Essentials).
+        let coord = s.coordinate ?? (try? await env.places.placeDetails(placeID: s.placeID, level: .basic, languageCode: env.languageCode, sessionToken: token).coordinate)
         return .place(placeID: s.placeID, name: s.mainText, coordinate: coord)
     }
 

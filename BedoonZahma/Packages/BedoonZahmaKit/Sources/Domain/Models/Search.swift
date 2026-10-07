@@ -30,12 +30,15 @@ public struct SearchSuggestion: Identifiable, Hashable, Sendable {
     public var mainText: String
     public var secondaryText: String?
     public var distanceMeters: Int?
+    /// الإحداثية إن وفّرها المزوّد مع الاقتراح (TomTom يفعل؛ Google يحتاج Place Details).
+    public var coordinate: Coordinate?
     public var id: String { placeID }
-    public init(placeID: String, mainText: String, secondaryText: String?, distanceMeters: Int?) {
+    public init(placeID: String, mainText: String, secondaryText: String?, distanceMeters: Int?, coordinate: Coordinate? = nil) {
         self.placeID = placeID
         self.mainText = mainText
         self.secondaryText = secondaryText
         self.distanceMeters = distanceMeters
+        self.coordinate = coordinate
     }
 }
 

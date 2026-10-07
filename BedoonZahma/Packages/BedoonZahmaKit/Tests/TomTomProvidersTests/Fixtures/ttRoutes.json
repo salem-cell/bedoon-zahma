@@ -1,0 +1,39 @@
+{
+  "primary": {
+    "routes": [
+      {
+        "summary": { "lengthInMeters": 24120, "travelTimeInSeconds": 1740, "trafficDelayInSeconds": 300, "noTrafficTravelTimeInSeconds": 1440, "liveTrafficIncidentsTravelTimeInSeconds": 1740 },
+        "legs": [ { "points": [ { "latitude": 24.70, "longitude": 46.60 }, { "latitude": 24.71, "longitude": 46.61 }, { "latitude": 24.72, "longitude": 46.62 }, { "latitude": 24.73, "longitude": 46.63 }, { "latitude": 24.74, "longitude": 46.64 } ] } ],
+        "sections": [
+          { "startPointIndex": 0, "endPointIndex": 4, "sectionType": "TRAVEL_MODE", "travelMode": "car" },
+          { "startPointIndex": 1, "endPointIndex": 2, "sectionType": "TRAFFIC", "simpleCategory": "JAM", "effectiveSpeedInKmh": 12, "delayInSeconds": 240, "magnitudeOfDelay": 3 },
+          { "startPointIndex": 3, "endPointIndex": 4, "sectionType": "TRAFFIC", "simpleCategory": "ROAD_WORK", "effectiveSpeedInKmh": 40, "delayInSeconds": 60, "magnitudeOfDelay": 1 }
+        ],
+        "guidance": {
+          "instructions": [
+            { "routeOffsetInMeters": 0, "travelTimeInSeconds": 0, "point": { "latitude": 24.70, "longitude": 46.60 }, "pointIndex": 0, "instructionType": "LOCATION_DEPARTURE", "street": "شارع العليا", "maneuver": "DEPART", "message": "غادر من شارع العليا" },
+            { "routeOffsetInMeters": 1500, "travelTimeInSeconds": 120, "point": { "latitude": 24.71, "longitude": 46.61 }, "pointIndex": 1, "instructionType": "TURN", "street": "طريق الملك فهد", "maneuver": "TURN_RIGHT", "message": "انعطف يمينًا إلى طريق الملك فهد" },
+            { "routeOffsetInMeters": 20000, "travelTimeInSeconds": 1500, "point": { "latitude": 24.73, "longitude": 46.63 }, "pointIndex": 3, "instructionType": "TURN", "street": "طريق الأمير تركي", "maneuver": "BEAR_LEFT", "message": "انحرف يسارًا" },
+            { "routeOffsetInMeters": 24120, "travelTimeInSeconds": 1740, "point": { "latitude": 24.74, "longitude": 46.64 }, "pointIndex": 4, "instructionType": "LOCATION_ARRIVAL", "maneuver": "ARRIVE", "message": "وصلت" }
+          ]
+        }
+      },
+      {
+        "summary": { "lengthInMeters": 32000, "travelTimeInSeconds": 2160, "trafficDelayInSeconds": 60, "noTrafficTravelTimeInSeconds": 2100 },
+        "legs": [ { "points": [ { "latitude": 24.70, "longitude": 46.60 }, { "latitude": 24.72, "longitude": 46.58 }, { "latitude": 24.74, "longitude": 46.64 } ] } ],
+        "sections": [],
+        "guidance": { "instructions": [ { "routeOffsetInMeters": 0, "travelTimeInSeconds": 0, "pointIndex": 0, "maneuver": "DEPART", "message": "غادر" }, { "routeOffsetInMeters": 32000, "travelTimeInSeconds": 2160, "pointIndex": 2, "maneuver": "ARRIVE", "message": "وصلت" } ] }
+      }
+    ]
+  },
+  "shortest": {
+    "routes": [
+      {
+        "summary": { "lengthInMeters": 19000, "travelTimeInSeconds": 2040, "trafficDelayInSeconds": 660, "noTrafficTravelTimeInSeconds": 1380 },
+        "legs": [ { "points": [ { "latitude": 24.70, "longitude": 46.60 }, { "latitude": 24.72, "longitude": 46.62 }, { "latitude": 24.74, "longitude": 46.64 } ] } ],
+        "sections": [ { "startPointIndex": 0, "endPointIndex": 2, "sectionType": "TRAFFIC", "simpleCategory": "JAM", "effectiveSpeedInKmh": 9, "delayInSeconds": 660, "magnitudeOfDelay": 4 } ],
+        "guidance": { "instructions": [] }
+      }
+    ]
+  }
+}

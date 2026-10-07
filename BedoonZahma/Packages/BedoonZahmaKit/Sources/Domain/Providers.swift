@@ -104,10 +104,24 @@ public protocol PlacesProvider: Sendable {
 
 // MARK: - الملاحة
 
+/// المناورة التالية (للإرشاد الذاتي المبني على MapKit). nil عندما يرسم SDK الملاحة رأسه الخاص.
+public struct GuidanceInstruction: Equatable, Sendable {
+    public var text: String
+    public var maneuver: Maneuver?
+    public var distanceMeters: Int
+    public var streetName: String?
+    public init(text: String, maneuver: Maneuver?, distanceMeters: Int, streetName: String?) {
+        self.text = text
+        self.maneuver = maneuver
+        self.distanceMeters = distanceMeters
+        self.streetName = streetName
+    }
+}
+
 public enum NavigationState: Equatable, Sendable {
     case idle
     case calculating
-    case guiding(remainingSeconds: Int?, remainingMeters: Int?, delay: TrafficDelayCategory)
+    case guiding(remainingSeconds: Int?, remainingMeters: Int?, delay: TrafficDelayCategory, instruction: GuidanceInstruction? = nil)
     case arrived
     case failed(String)
 }
@@ -124,6 +138,15 @@ public protocol NavigationProvider: AnyObject {
     func start(route: RouteModel, destination: Destination, strategy: RouteStrategy) async throws
     func stop()
     func setVoiceGuidance(enabled: Bool)
+    /// المسار الحالي (قد يتغيّر بإعادة التوجيه) — لرسمه على خريطة لا يملكها SDK الملاحة.
+    var activeRoute: RouteModel? { get }
+    /// آخر موقع معروف أثناء الملاحة (لمتابعة الكاميرا).
+    var currentLocation: Coordinate? { get }
+}
+
+public extension NavigationProvider {
+    var activeRoute: RouteModel? { nil }
+    var currentLocation: Coordinate? { nil }
 }
 
 // MARK: - الموقع

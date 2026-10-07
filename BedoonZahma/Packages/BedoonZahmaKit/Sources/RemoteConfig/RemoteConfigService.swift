@@ -33,6 +33,8 @@ public struct AppRemoteConfig: Codable, Hashable, Sendable {
     public var nearby: NearbyConfigValues = .init()
     public var flags: FeatureFlags = .init()
     public var searchRegionCodes: [String] = ["sa"]
+    /// المزوّد الذي يعلنه الخادم (tomtom/google) — للمراقبة؛ اختيار المزوّد الفعلي من إعداد البناء BZ_MAPS_PROVIDER.
+    public var mapsProvider: String = "tomtom"
     public init() {}
 }
 

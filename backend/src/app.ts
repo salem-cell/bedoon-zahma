@@ -6,12 +6,14 @@ import { AutocompleteBody, ComputeRoutesBody, GoogleClient, GoogleError, NearbyB
 import { Metrics } from "./metrics.js";
 import { buildRemoteConfig } from "./remoteConfig.js";
 import { EventsBody } from "./analytics.js";
+import { TTMatrixBody, TTNearbyBody, TTRoutesBody, TTSearchBody, TomTomClient } from "./tomtom.js";
 
-export function buildApp(cfg: Config, deps?: { google?: GoogleClient; metrics?: Metrics }): FastifyInstance {
+export function buildApp(cfg: Config, deps?: { google?: GoogleClient; tomtom?: TomTomClient; metrics?: Metrics }): FastifyInstance {
   const app = Fastify({ logger: { level: cfg.LOG_LEVEL }, bodyLimit: 256 * 1024 });
   const metrics = deps?.metrics ?? new Metrics(cfg.skuPrices);
   const google = deps?.google ?? new GoogleClient(cfg, metrics);
-  const remote = buildRemoteConfig(cfg.CONFIG_OVERRIDES_PATH);
+  const tomtom = deps?.tomtom ?? new TomTomClient(cfg, metrics);
+  const remote = buildRemoteConfig(cfg.CONFIG_OVERRIDES_PATH, { mapsProvider: cfg.MAPS_PROVIDER });
 
   app.register(rateLimit, {
     max: cfg.RATE_LIMIT_PER_MIN,
@@ -73,6 +75,24 @@ export function buildApp(cfg: Config, deps?: { google?: GoogleClient; metrics?: 
   });
 
   app.post("/v1/places/autocomplete", async (req) => google.autocomplete(AutocompleteBody.parse(req.body)));
+
+  // TomTom (المزوّد المجاني)
+  app.post("/v1/tt/routes", async (req) => tomtom.routes(TTRoutesBody.parse(req.body)));
+  app.post("/v1/tt/matrix", async (req) => tomtom.matrix(TTMatrixBody.parse(req.body)));
+  app.post("/v1/tt/nearby", async (req) => tomtom.nearby(TTNearbyBody.parse(req.body)));
+  app.post("/v1/tt/search", async (req) => tomtom.search(TTSearchBody.parse(req.body)));
+  app.get("/v1/tt/place/:id", async (req) => {
+    const { id } = z.object({ id: z.string().min(1).max(256) }).parse(req.params);
+    const q = z.object({ languageCode: z.string().min(2).max(10).default("ar"), details: z.enum(["0", "1"]).default("1") }).parse(req.query);
+    return tomtom.place(id, q.languageCode, q.details === "1");
+  });
+  app.get("/v1/tt/photo", async (req, reply) => {
+    const q = z.object({ id: z.string().min(1).max(256), width: z.coerce.number().int().min(50).max(1600).default(800), height: z.coerce.number().int().min(50).max(1600).default(520) }).parse(req.query);
+    if (!remote.config.flags.photosEnabled) return reply.code(404).send({ error: "photos disabled" });
+    const upstream = await tomtom.photo(q.id, q.width, q.height);
+    const buf = Buffer.from(await upstream.arrayBuffer());
+    return reply.header("Cache-Control", "no-store").type(upstream.headers.get("content-type") ?? "image/jpeg").send(buf);
+  });
 
   // التحليلات: تحقق صارم ثم سجل منظّم (يُوصَل لاحقًا بـ BigQuery/ClickHouse عبر سجلات stdout).
   app.post("/v1/analytics/events", async (req, reply) => {

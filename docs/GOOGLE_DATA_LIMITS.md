@@ -50,3 +50,19 @@
 - المتاح للقراءة: `timeToNextDestination`, `distanceToNextDestination`, `delayCategoryToNextDestination`, `currentRouteLeg`، وأحداث `didArriveAt`, `didUpdateRemainingTime/Distance`, `navigatorDidChangeRoute`.
 - رأس المناورة التالية والإرشاد الصوتي (عربي/إنجليزي بلغة الجهاز) من SDK نفسه؛ لم نبنِ عرض مناورات مخصصًا كي لا نعتمد على واجهات غير موثّقة.
 - «لقينا لك طريق أهدأ» تُحسب في التطبيق (RerouteDecider) بإعادة استدعاء Routes API دوريًا من الموقع الحالي، ثم تُبدَّل الوجهة برمز المسار الجديد.
+
+
+## TomTom (المزوّد المجاني الافتراضي) — ما يوفره وما لا نزيّفه
+
+| الحاجة | المصدر الرسمي | الحالة |
+|---|---|---|
+| المدة بالمرور/بدونه، التأخير | `summary.travelTimeInSeconds`, `noTrafficTravelTimeInSeconds`, `trafficDelayInSeconds` (مع `computeTravelTimeFor=all`) | ✅ |
+| أقسام المرور | `sections[sectionType=TRAFFIC]` مع `magnitudeOfDelay` 0–4 و`effectiveSpeedInKmh` → SLOW/TRAFFIC_JAM | ✅ (magnitude ≥3 أو ≤15 كم/س = اختناق) |
+| الحوادث | `simpleCategory` ∈ {ROAD_WORK, ROAD_CLOSURE, OTHER} | ✅ `incidentCount` فعلي (غير متاح في Google) |
+| البدائل | `maxAlternatives` حتى 5 + طلب `routeType=shortest` مرجعي | ✅ |
+| الإرشادات | `guidance.instructions` بالعربية مع `maneuver` و`routeOffsetInMeters` | ✅ تُشغّل الإرشاد الذاتي |
+| route token | غير موجود | — الملاحة ذاتية فوق MapKit |
+| الأماكن | `nearbySearch` حتى 100 نتيجة، `openingHours=nextSevenDays`، تصنيفات بالإنجليزية تُحوَّل إلى أنواعنا | ✅ |
+| التقييم/السعر/الصور | `poiDetails` (عند توفر `dataSources.poiDetails`) | ⚠️ على صفحة التفاصيل فقط (حصة البحث 2.5K/شهر) → القوائم بلا تقييم حتى الفتح |
+| ETA للقوائم | طلب توجيه ملخّص لكل مكان (`TRAVEL_TIME_MODE=routes`) أو Matrix v2 | ✅ فعلي؛ العميل يحدّ المرشّحين بـ 25 |
+| الحصص | توجيه 20K/شهر، بحث 2.5K/شهر، مصفوفة 2.5K خلية/شهر | ⚠️ للإطلاق الواسع: ترقية TomTom أو التحول إلى Google |

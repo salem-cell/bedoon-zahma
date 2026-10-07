@@ -121,6 +121,9 @@ struct NavigationScreen: View {
             if let env { env.maps.navigationMap() } else { BZColor.night.ignoresSafeArea() }
 
             VStack(spacing: 12) {
+                if case .guiding(_, _, _, let instruction) = vm.state, let ins = instruction {
+                    InstructionCard(instruction: ins).padding(.horizontal, 16)
+                }
                 if let e = vm.error {
                     CardContainer {
                         ErrorStateView(title: e.userTitle, message: e.userMessage, retryTitle: L("common.back")) { finish() }
@@ -170,7 +173,7 @@ struct NavigationScreen: View {
 
     private var etaText: String {
         switch vm.state {
-        case .guiding(let secs, _, _):
+        case .guiding(let secs, _, _, _):
             if let secs { return "\(Int((Double(secs) / 60).rounded())) \(L("unit.minute"))" }
             return "\(trip.selectedRoute?.durationMinutes ?? 0) \(L("unit.minute"))"
         case .arrived: return L("nav.arrived")
@@ -181,7 +184,7 @@ struct NavigationScreen: View {
     }
 
     private var subText: String {
-        if case .guiding(let secs, let meters, let delay) = vm.state {
+        if case .guiding(let secs, let meters, let delay, _) = vm.state {
             var parts: [String] = []
             if let meters { parts.append(L("unit.km.value", Double(meters) / 1000)) }
             if let secs { parts.append(L("nav.arrival", Date().addingTimeInterval(Double(secs)).formatted(date: .omitted, time: .shortened))) }
@@ -201,6 +204,52 @@ struct NavigationScreen: View {
         vm.stop()
         trip.options = nil
         router.popToRoot()
+    }
+}
+
+/// بطاقة المناورة التالية (الإرشاد الذاتي فوق MapKit) — تطابق تصميم رأس الملاحة في النموذج.
+struct InstructionCard: View {
+    var instruction: GuidanceInstruction
+
+    var body: some View {
+        HStack(spacing: 16) {
+            Text(symbol)
+                .font(.system(size: 30, weight: .heavy))
+                .foregroundStyle(.white)
+                .frame(width: 64, height: 64)
+                .background(BZColor.sky, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(distanceText).font(BZFont.font(28, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.7)
+                Text(instruction.text).font(BZFont.body.weight(.semibold)).lineLimit(2)
+                if let s = instruction.streetName, !s.isEmpty, !instruction.text.contains(s) { Text(s).font(BZFont.small).foregroundStyle(BZColor.mute).lineLimit(1) }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 18).padding(.vertical, 16)
+        .background(Color.white, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var distanceText: String {
+        let m = instruction.distanceMeters
+        if m >= 1000 { return L("unit.km.value", Double(m) / 1000) }
+        return "\(max(Int((Double(m) / 10).rounded()) * 10, 0)) \(L("unit.meter"))"
+    }
+
+    private var symbol: String {
+        switch instruction.maneuver {
+        case .turnLeft, .turnSharpLeft: return "↰"
+        case .turnRight, .turnSharpRight: return "↱"
+        case .turnSlightLeft, .forkLeft, .rampLeft: return "↖"
+        case .turnSlightRight, .forkRight, .rampRight: return "↗"
+        case .uturnLeft, .uturnRight: return "↶"
+        case .roundaboutLeft, .roundaboutRight: return "⟳"
+        case .merge: return "⤵"
+        case .ferry, .ferryTrain: return "⛴"
+        case .depart: return "▲"
+        default: return "↑"
+        }
     }
 }
 

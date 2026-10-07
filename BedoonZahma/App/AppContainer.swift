@@ -9,6 +9,8 @@ import Location
 import Networking
 import RemoteConfig
 import Storage
+import TomTomProviders
+import TrafficEngine
 
 /// قراءة الإعدادات المحقونة من xcconfig عبر Info.plist.
 enum AppConfig {
@@ -21,6 +23,8 @@ enum AppConfig {
     static var backendURL: URL? { string("BZBackendURL").flatMap(URL.init(string:)) }
     static var appKey: String { string("BZAppKey") ?? "" }
     static var appVersion: String { (string("CFBundleShortVersionString") ?? "0") + "+" + (string("CFBundleVersion") ?? "0") }
+    /// مزوّد البيانات: "tomtom" (مجاني؛ خريطة Apple MapKit وإرشاد ذاتي) أو "google" (Maps/Navigation SDK).
+    static var mapsProvider: String { (string("BZMapsProvider") ?? "tomtom").lowercased() }
 
     /// Mocks مسموحة في DEBUG فقط. في Release تُتجاهل القيمة نهائيًا.
     static var useMocks: Bool {
@@ -57,6 +61,28 @@ enum AppContainer {
             // بلا خادم لا يمكن تشغيل الإنتاج — نُفشل مبكرًا بدل عرض بيانات وهمية.
             fatalError("BZ_BACKEND_URL مفقود. راجع Config/*.xcconfig")
         }
+
+        if AppConfig.mapsProvider == "tomtom" {
+            // TomTom (بيانات حقيقية بمرور حي) + Apple MapKit (خريطة) + إرشاد ذاتي — بلا مفاتيح على الجهاز إطلاقًا.
+            let routing = TomTomRoutingProvider(api: backend)
+            let guidance = GuidanceNavigationProvider(routing: routing) {
+                let cfg = await remoteConfig.config
+                return RouteSelector(scorer: TrafficRouteScorer(weights: cfg.trafficWeights))
+            }
+            return AppEnvironment(
+                places: TomTomPlacesProvider(api: backend),
+                routing: routing,
+                travelTime: TomTomTravelTimeProvider(api: backend),
+                location: LocationService(),
+                analytics: analytics,
+                remoteConfig: remoteConfig,
+                favorites: FavoritesStore(), recents: RecentSearchesStore(), savedAddresses: SavedAddressesStore(), settings: SettingsStore(),
+                maps: MapKitMapSurfaces(navigation: guidance),
+                navigation: guidance,
+                isDevMock: false
+            )
+        }
+
         // بلا مفتاح Maps SDK (مثل بناء TestFlight قبل تفعيل Google Cloud) لا نُهيّئ Google Maps كي لا ينهار التطبيق؛
         // تُعرض خريطة محايدة وتفشل الملاحة بخطأ واضح، وتبقى بيانات الأماكن والطرق حقيقية عبر الخادم.
         let hasMapsKey = !(AppConfig.googleMapsIOSKey ?? "").isEmpty
