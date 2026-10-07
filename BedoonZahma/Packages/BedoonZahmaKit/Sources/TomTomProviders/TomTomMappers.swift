@@ -18,10 +18,15 @@ public enum TomTomMappers {
         var incidents = 0
         for sec in (r.sections ?? []) where sec.sectionType?.uppercased() == "TRAFFIC" {
             guard let a = sec.startPointIndex, let b = sec.endPointIndex, b > a else { continue }
+            // magnitudeOfDelay: 0 مجهول، 1 بسيط، 2 متوسط، 3 كبير، 4 غير محدد (نعتمد السرعة الفعلية عندها).
             let magnitude = sec.magnitudeOfDelay ?? 0
             let speed = sec.effectiveSpeedInKmh ?? 999
-            let isJam = magnitude >= 3 || speed <= 15 || sec.simpleCategory == "ROAD_CLOSURE"
-            intervals.append(SpeedReadingInterval(startPolylinePointIndex: a, endPolylinePointIndex: b, speed: isJam ? .trafficJam : .slow))
+            let isJam = magnitude == 3 || speed <= 15 || sec.simpleCategory == "ROAD_CLOSURE"
+            // قسم «أعمال طرق» بسرعة طبيعية (≥ 50 كم/س) ودرجة غير محددة لا يُعدّ بطئًا، لكنه يبقى حادثًا.
+            let isSlow = !isJam && !(magnitude == 4 && speed >= 50) && !(magnitude == 0 && speed >= 50)
+            if isJam || isSlow {
+                intervals.append(SpeedReadingInterval(startPolylinePointIndex: a, endPolylinePointIndex: b, speed: isJam ? .trafficJam : .slow))
+            }
             if let cat = sec.simpleCategory, cat != "JAM" { incidents += 1 } // ROAD_WORK / ROAD_CLOSURE / OTHER = حوادث فعلية
         }
 

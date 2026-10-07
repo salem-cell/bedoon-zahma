@@ -137,11 +137,23 @@ export class TomTomClient {
     return this.call<unknown>("tt.nearby", "tt.search", `https://api.tomtom.com/search/2/nearbySearch/.json?${q}`);
   }
 
-  search(body: z.infer<typeof TTSearchBody>) {
-    const q = new URLSearchParams({ key: this.key, typeahead: "true", limit: String(body.limit), language: body.languageCode, countrySet: body.countrySet.join(","), view: "Unified" });
-    if (body.center) { q.set("lat", String(body.center.latitude)); q.set("lon", String(body.center.longitude)); }
-    if (body.radiusMeters) q.set("radius", String(Math.round(body.radiusMeters)));
-    return this.call<unknown>("tt.search", "tt.search", `https://api.tomtom.com/search/2/search/${encodeURIComponent(body.query)}.json?${q}`);
+  /** بحث نصي بإكمال تلقائي. العربية: إن قلّت النتائج نعيد المحاولة بلا «ال» التعريف (بيانات TomTom تخزّن «بوليفارد الرياض» لا «البوليفارد»). */
+  async search(body: z.infer<typeof TTSearchBody>) {
+    const run = async (query: string, typeahead: boolean) => {
+      const q = new URLSearchParams({ key: this.key, limit: String(body.limit), language: body.languageCode, countrySet: body.countrySet.join(","), view: "Unified" });
+      if (typeahead) q.set("typeahead", "true");
+      if (body.center) { q.set("lat", String(body.center.latitude)); q.set("lon", String(body.center.longitude)); }
+      if (body.radiusMeters) q.set("radius", String(Math.round(body.radiusMeters)));
+      return this.call<{ results?: { id?: string }[] }>("tt.search", "tt.search", `https://api.tomtom.com/search/2/search/${encodeURIComponent(query)}.json?${q}`);
+    };
+    const first = await run(body.query, true);
+    const results = [...(first.results ?? [])];
+    const stripped = body.query.trim().replace(/^(ال|وال|بال|لل)/, "");
+    if (results.length < 3 && stripped !== body.query.trim() && stripped.length >= 2) {
+      const second = await run(stripped, true).catch(() => ({ results: [] as { id?: string }[] }));
+      for (const r of second.results ?? []) if (!results.some((x) => x.id === r.id)) results.push(r);
+    }
+    return { ...first, results: results.slice(0, body.limit) };
   }
 
   async place(id: string, languageCode: string, withDetails: boolean) {
