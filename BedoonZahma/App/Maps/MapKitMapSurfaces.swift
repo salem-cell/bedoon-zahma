@@ -12,7 +12,7 @@ final class MapKitMapSurfaces: MapSurfaces {
 
     func homeMap(userLocation: Coordinate?) -> AnyView { AnyView(HomeMapView(userLocation: userLocation)) }
     func routesMap(origin: Coordinate, destination: Coordinate?, overlays: [MapRouteOverlay]) -> AnyView { AnyView(RoutesMapView(origin: origin, destination: destination, overlays: overlays)) }
-    func nearbyMap(center: Coordinate, pins: [MapPin], onPinTap: @escaping (String) -> Void, onRegionMoved: @escaping (Coordinate) -> Void) -> AnyView {
+    func nearbyMap(center: Coordinate, pins: [Domain.MapPin], onPinTap: @escaping (String) -> Void, onRegionMoved: @escaping (Coordinate) -> Void) -> AnyView {
         AnyView(NearbyMapView(center: center, pins: pins, onPinTap: onPinTap, onRegionMoved: onRegionMoved))
     }
     func navigationMap() -> AnyView { AnyView(NavigationMapView(provider: navigation)) }
@@ -89,7 +89,7 @@ struct RoutesMapView: View {
 
 struct NearbyMapView: View {
     var center: Coordinate
-    var pins: [MapPin]
+    var pins: [Domain.MapPin]
     var onPinTap: (String) -> Void
     var onRegionMoved: (Coordinate) -> Void
     @State private var position: MapCameraPosition = .automatic
