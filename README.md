@@ -61,7 +61,12 @@ powershell -File scripts/test-kit-windows.ps1
 
 ## الحالة (2026‑10‑07)
 
-- **مُجمَّع ومُختبَر فعليًا على Windows (Swift 6.4):** Domain، TrafficEngine، PlaceRanking، NearbyDiscovery، Networking، BackendClient، GoogleProviders، DevMocks، Storage، Analytics، RemoteConfig — 36 اختبارًا تمرّ (13 + 8 + 11 + 4).
-- **مُختبَر فعليًا:** الخادم الخلفي — فحص الأنواع و11 اختبار vitest.
-- **مكتوب ومُراجَع بلا تجميع (يحتاج Mac):** DesignSystem، Features (الشاشات)، Location، وهدف التطبيق مع Google Maps/Navigation SDK. راجعته مراجعة مستقلة سطرًا سطرًا وطُبّقت كل ملاحظاتها، لكن أول بناء بـ Xcode 26 قد يكشف تفاصيل صغيرة (مثل `GMSRouteStatus.OK` أو واجهة حوار شروط الملاحة).
-- التجربة الميدانية الحقيقية في الرياض هي خطوة الإغلاق قبل App Store (انظر `docs/APP_STORE_CHECKLIST.md`).
+المستودع: `salem-cell/bedoon-zahma` (خاص). CI على Mac سحابي (`.github/workflows/ios.yml`) أخضر:
+
+- **تطبيق iOS** يُجمَّع بـ Xcode 26 على `macos-26` مع Google Maps + Navigation SDK 11.2.0 (محاكي، بلا توقيع).
+- **الحزمة كاملة** (بما فيها شاشات SwiftUI) تُجمَّع على macOS، و36 اختبارًا تمرّ على macOS وWindows.
+- **الخادم الخلفي**: فحص الأنواع و11 اختبارًا.
+- **اختبارات الواجهة** على المحاكي بوضع DevMocks ضمن وظيفة `ios-tests`.
+- **النشر إلى TestFlight** جاهز بتوقيع سحابي (`release.yml`) — يحتاج أسرار Apple/Google مرة واحدة: انظر [docs/RELEASE.md](docs/RELEASE.md).
+
+ما يبقى بشريًا: إنشاء مفاتيح Apple وGoogle ونشر الخادم، ثم التجربة الميدانية في الرياض (`docs/APP_STORE_CHECKLIST.md`).

@@ -1,0 +1,43 @@
+# النشر إلى TestFlight وApp Store بلا جهاز Mac
+
+كل شيء يعمل على Mac سحابي في GitHub Actions (`.github/workflows/release.yml`). تحتاج مرة واحدة إلى:
+
+## 1) حساب Apple Developer ومفتاح App Store Connect API
+1. من [App Store Connect](https://appstoreconnect.apple.com) → **Users and Access → Integrations → App Store Connect API** → أنشئ مفتاحًا بدور **App Manager** (أو Admin).
+2. احفظ **Key ID** و**Issuer ID** ونزّل ملف `AuthKey_XXXXXXXXXX.p8` (يُنزَّل مرة واحدة فقط).
+3. أنشئ التطبيق في App Store Connect: **Apps → +** باسم «بدون زحمة» وBundle ID `sa.bedoonzahma.app` (أنشئ المعرّف أولًا من **Certificates, Identifiers & Profiles → Identifiers**).
+4. معرّف الفريق (Team ID) من **Membership details**.
+
+## 2) أسرار GitHub
+في المستودع `salem-cell/bedoon-zahma` → **Settings → Secrets and variables → Actions → New repository secret**:
+
+| الاسم | القيمة |
+|---|---|
+| `ASC_KEY_ID` | Key ID |
+| `ASC_ISSUER_ID` | Issuer ID |
+| `ASC_KEY_P8_BASE64` | محتوى `.p8` بترميز base64 |
+| `APPLE_TEAM_ID` | Team ID |
+| `GOOGLE_MAPS_IOS_KEY` | مفتاح Maps/Navigation SDK المقيّد بـ `sa.bedoonzahma.app` |
+| `BZ_APP_KEY` | نفس القيمة في `backend/.env` → `APP_KEYS` |
+| `BZ_BACKEND_URL` | رابط الخادم الخلفي HTTPS |
+
+لتشفير `.p8` على Windows:
+
+```bash
+certutil -encode AuthKey_XXXXXXXXXX.p8 key.b64.txt
+```
+
+ثم انسخ المحتوى بين سطري BEGIN/END (بلا السطرين) إلى السر. على Mac/Linux: `base64 -i AuthKey.p8 | pbcopy`.
+
+## 3) التشغيل
+من تبويب **Actions → Release to TestFlight → Run workflow**. يأخذ 15 إلى 30 دقيقة. التوقيع سحابي تلقائي (Xcode Managed) عبر مفتاح API، فلا حاجة لشهادات أو ملفات تزويد يدوية.
+
+بعد الرفع يظهر البناء في **TestFlight** خلال دقائق لمعالجة Apple، ثم أضف نفسك مختبِرًا داخليًا وثبّت تطبيق TestFlight على iPhone.
+
+## 4) الخادم الخلفي
+انشر `backend/` (Docker/Cloud Run) قبل أول بناء إنتاجي، وضع رابطه في `BZ_BACKEND_URL`. بلا خادم لا يُقلع بناء Release (مقصود: لا بيانات وهمية في الإنتاج).
+
+## استكشاف الأخطاء
+- **No profiles / signing**: تأكد أن المفتاح بدور App Manager وأن Bundle ID مُسجَّل، وأن `APPLE_TEAM_ID` صحيح.
+- **ITMS-90xxx عند الرفع**: راجع `release-logs` في artifacts؛ أغلبها أيقونة ناقصة (أضف 1024×1024 في `AppIcon.appiconset`) أو نص إذن الموقع.
+- **رفض Google Maps attribution**: أضف شعار Google Maps الرسمي إلى `GoogleMapsLogo.imageset`.

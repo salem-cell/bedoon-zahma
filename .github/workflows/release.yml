@@ -1,0 +1,118 @@
+# نشر إلى TestFlight من Mac سحابي بلا أي جهاز Mac محلي.
+# التوقيع سحابي عبر مفتاح App Store Connect API (Xcode Managed signing مع -allowProvisioningUpdates).
+#
+# الأسرار المطلوبة في GitHub → Settings → Secrets and variables → Actions:
+#   ASC_KEY_ID          معرّف مفتاح App Store Connect API (Users and Access → Integrations → App Store Connect API)
+#   ASC_ISSUER_ID       Issuer ID من الصفحة نفسها
+#   ASC_KEY_P8_BASE64   محتوى ملف AuthKey_XXXX.p8 مشفّرًا base64 (على Windows: certutil -encode)
+#   APPLE_TEAM_ID       معرّف الفريق (10 أحرف)
+#   GOOGLE_MAPS_IOS_KEY مفتاح Maps/Navigation SDK المقيّد بـ Bundle ID
+#   BZ_APP_KEY          مفتاح التطبيق للخادم الخلفي
+#   BZ_BACKEND_URL      رابط الخادم الخلفي HTTPS (مثل https://api.bedoonzahma.sa)
+#
+# يجب أن يكون التطبيق مُنشأً في App Store Connect بـ Bundle ID: sa.bedoonzahma.app
+name: Release to TestFlight
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_number:
+        description: "رقم البناء (يُترك فارغًا لاستخدام رقم التشغيل)"
+        required: false
+        default: ""
+
+jobs:
+  testflight:
+    runs-on: macos-26
+    timeout-minutes: 90
+    env:
+      BUILD_NUMBER: ${{ inputs.build_number != '' && inputs.build_number || github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen & xcbeautify
+        run: brew install xcodegen xcbeautify
+
+      - name: Write Secrets.xcconfig
+        working-directory: BedoonZahma
+        run: |
+          cat > Config/Secrets.xcconfig <<EOF
+          GOOGLE_MAPS_IOS_KEY = ${{ secrets.GOOGLE_MAPS_IOS_KEY }}
+          BZ_APP_KEY = ${{ secrets.BZ_APP_KEY }}
+          BZ_TEAM_ID = ${{ secrets.APPLE_TEAM_ID }}
+          EOF
+          # رابط الخادم للإنتاج
+          sed -i '' "s#^BZ_BACKEND_URL = .*#BZ_BACKEND_URL = ${{ secrets.BZ_BACKEND_URL }}#" Config/Release.xcconfig
+
+      - name: Write App Store Connect API key
+        run: |
+          mkdir -p ~/private_keys
+          echo "${{ secrets.ASC_KEY_P8_BASE64 }}" | base64 --decode > ~/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+          chmod 600 ~/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8
+
+      - name: Generate project
+        working-directory: BedoonZahma
+        run: xcodegen generate
+
+      - name: Set build number
+        working-directory: BedoonZahma
+        run: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" App/Info.plist || true
+          echo "Build number: $BUILD_NUMBER"
+
+      - name: Archive (Release)
+        working-directory: BedoonZahma
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project BedoonZahma.xcodeproj \
+            -scheme BedoonZahma \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath ../build/BedoonZahma.xcarchive \
+            -skipPackagePluginValidation \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8 \
+            -authenticationKeyID ${{ secrets.ASC_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.ASC_ISSUER_ID }} \
+            DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }} \
+            CURRENT_PROJECT_VERSION=$BUILD_NUMBER \
+            2>&1 | tee ../archive.log | xcbeautify --renderer github-actions
+
+      - name: Export & upload to App Store Connect
+        run: |
+          cat > ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>teamID</key><string>${{ secrets.APPLE_TEAM_ID }}</string>
+            <key>uploadSymbols</key><true/>
+            <key>manageAppVersionAndBuildNumber</key><true/>
+          </dict></plist>
+          EOF
+          set -o pipefail
+          xcodebuild -exportArchive \
+            -archivePath build/BedoonZahma.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath build/export \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8 \
+            -authenticationKeyID ${{ secrets.ASC_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.ASC_ISSUER_ID }} \
+            2>&1 | tee export.log | xcbeautify --renderer github-actions
+
+      - name: Show errors (on failure)
+        if: failure()
+        run: grep -n -E "error:|BUILD FAILED|ARCHIVE FAILED|EXPORT FAILED" archive.log export.log | head -80 || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-logs
+          path: |
+            archive.log
+            export.log
+            build/export/*.plist

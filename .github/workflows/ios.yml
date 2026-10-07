@@ -65,6 +65,48 @@ jobs:
           name: ios-build-log
           path: ios-build.log
 
+  ios-tests:
+    name: iOS tests on simulator (UI tests with DevMocks)
+    runs-on: macos-26
+    needs: ios-build
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen & xcbeautify
+        run: brew install xcodegen xcbeautify
+      - name: Generate project
+        working-directory: BedoonZahma
+        run: xcodegen generate
+      - name: Pick a simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; ds=[x for k,v in d.items() if "iOS" in k for x in v if x["name"].startswith("iPhone")]; ds.sort(key=lambda x: x["name"]); print(ds[-1]["udid"])')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl boot "$UDID" || true
+      - name: xcodebuild test
+        working-directory: BedoonZahma
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project BedoonZahma.xcodeproj \
+            -scheme BedoonZahma \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -skipPackagePluginValidation \
+            -resultBundlePath ../TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            2>&1 | tee ../ios-tests.log | xcbeautify --renderer github-actions
+      - name: Show failures (on failure)
+        if: failure()
+        run: grep -n -E "error:|failed|Failing tests" ios-tests.log | head -80 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-tests
+          path: |
+            ios-tests.log
+            TestResults.xcresult
+
   backend:
     name: Backend (typecheck + tests)
     runs-on: ubuntu-latest
