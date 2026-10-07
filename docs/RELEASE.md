@@ -11,7 +11,7 @@
 | مفتاح App Store Connect API (`ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_P8_BASE64`) وفريق Apple (`APPLE_TEAM_ID`) | ✅ موجودة كأسرار في المستودع |
 | معرّف الحزمة `sa.mishwarak.app` في حساب المطوّر | ✅ مسجَّل (ID: 7B2RB5552P) |
 | الخادم الخلفي | ✅ منشور على Vercel: `https://bedoon-zahma-backend.vercel.app` (`BZ_BACKEND_URL`, `BZ_APP_KEY` مضبوطان) |
-| **سجل التطبيق في App Store Connect** | ❌ يدويًا — App Store Connect → Apps → + → New App: المنصة iOS، الاسم «مشوارك أسهل»، اللغة الأساسية العربية، Bundle ID: `sa.mishwarak.app`، SKU مثل `MISHWARAK-IOS-001` |
+| سجل التطبيق في App Store Connect | ✅ أُنشئ (App ID 6820280275، SKU MISHWARAK-IOS-001) |
 | مفتاح TomTom (`TOMTOM_API_KEY` على Vercel) | ✅ مضبوط ومُختبَر (2026‑10‑08): طرق حقيقية ببدائل وأقسام مرور، 100 مقهى/طلب، بحث عربي |
 | ~~مفتاح Google Maps Platform لـ iOS~~ (اختياري الآن) (`GOOGLE_MAPS_IOS_KEY`) | ❌ من Google Cloud Console: فعّل Maps SDK for iOS وNavigation SDK وأنشئ مفتاحًا مقيّدًا بـ iOS/Bundle ID. بدونه يعمل التطبيق بخريطة محايدة وتُعطَّل الملاحة مع رسالة واضحة |
 | ~~مفتاح Google الخادمي~~ (اختياري الآن) (`GOOGLE_SERVER_API_KEY` على Vercel) | ❌ فعّل Routes API وPlaces API (New)، أنشئ مفتاحًا مقيّدًا بالـ APIs، ثم: `vercel env rm GOOGLE_SERVER_API_KEY production && printf 'AIza…' \| vercel env add GOOGLE_SERVER_API_KEY production && vercel deploy --prod` من مجلد `backend/` |
