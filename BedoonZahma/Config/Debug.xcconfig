@@ -3,7 +3,7 @@
 
 // 1 = استخدام DevMocks بلا مفاتيح (شارة «بيانات تجريبية»). 0 = Google الحقيقي عبر الخادم.
 BZ_USE_MOCKS = 1
-BZ_BACKEND_URL = http://127.0.0.1:8080
+BZ_BACKEND_URL = http:/$()/127.0.0.1:8080
 
 // مزوّد البيانات: tomtom (مجاني، MapKit) أو google
 BZ_MAPS_PROVIDER = tomtom

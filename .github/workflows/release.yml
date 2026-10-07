@@ -41,8 +41,10 @@ jobs:
           BZ_APP_KEY = ${{ secrets.BZ_APP_KEY }}
           BZ_TEAM_ID = ${{ secrets.APPLE_TEAM_ID }}
           EOF
-          # رابط الخادم للإنتاج
-          sed -i '' "s#^BZ_BACKEND_URL = .*#BZ_BACKEND_URL = ${{ secrets.BZ_BACKEND_URL }}#" Config/Release.xcconfig
+          # رابط الخادم للإنتاج — في xcconfig يبدأ "//" تعليقًا، لذا نكسر الشرطتين بـ $()
+          ESCAPED_URL="$(printf '%s' '${{ secrets.BZ_BACKEND_URL }}' | sed 's#://#:/$()/#')"
+          sed -i '' "s#^BZ_BACKEND_URL = .*#BZ_BACKEND_URL = ${ESCAPED_URL}#" Config/Release.xcconfig
+          grep -n "BZ_BACKEND_URL" Config/Release.xcconfig
 
       - name: Write App Store Connect API key
         run: |

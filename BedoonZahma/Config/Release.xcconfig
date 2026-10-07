@@ -2,7 +2,8 @@
 #include? "Secrets.xcconfig"
 
 BZ_USE_MOCKS = 0
-BZ_BACKEND_URL = https://bedoon-zahma-backend.vercel.app
+// تنبيه: في xcconfig يبدأ // تعليقًا، لذا نكتب الرابط بصيغة $() لكسر الشرطتين
+BZ_BACKEND_URL = https:/$()/bedoon-zahma-backend.vercel.app
 
 // مزوّد البيانات: tomtom (مجاني، MapKit) أو google
 BZ_MAPS_PROVIDER = tomtom
