@@ -99,6 +99,39 @@ jobs:
       - name: Show failures (on failure)
         if: failure()
         run: grep -n -E "error:|failed|Failing tests" ios-tests.log | head -80 || true
+      - name: Collect crash reports (on failure)
+        if: failure()
+        run: |
+          mkdir -p crashes
+          find ~/Library/Logs/DiagnosticReports ~/Library/Logs/CoreSimulator -type f \( -name "*.ips" -o -name "*.crash" \) -newer BedoonZahma/project.yml 2>/dev/null -exec cp {} crashes/ \; || true
+          ls -la crashes || true
+          for f in crashes/*; do
+            [ -f "$f" ] || continue
+            if grep -q "BedoonZahma" "$f"; then
+              echo "===== $f ====="
+              # ملف .ips: السطر الأول JSON ثم تقرير JSON — نطبع المقاطع المفيدة.
+              python3 - "$f" <<'PY' || head -120 "$f"
+          import json, sys
+          raw = open(sys.argv[1], encoding="utf-8", errors="replace").read().split("\n", 1)
+          try:
+              body = json.loads(raw[1])
+          except Exception:
+              print(raw[1][:6000]); sys.exit(0)
+          print("exception:", json.dumps(body.get("exception"), ensure_ascii=False))
+          print("termination:", json.dumps(body.get("termination"), ensure_ascii=False))
+          msg = body.get("asi") or body.get("lastExceptionBacktrace")
+          if msg: print("asi/last:", json.dumps(msg, ensure_ascii=False)[:3000])
+          images = body.get("usedImages", [])
+          faulting = body.get("faultingThread", 0)
+          for t in body.get("threads", []):
+              if t.get("triggered") or body["threads"].index(t) == faulting:
+                  print("--- faulting thread ---")
+                  for fr in t.get("frames", [])[:40]:
+                      img = images[fr.get("imageIndex", 0)] if fr.get("imageIndex", 0) < len(images) else {}
+                      print(f"  {img.get('name','?')}  {fr.get('symbol','')}  +{fr.get('imageOffset',0)}  {fr.get('sourceFile','')}:{fr.get('sourceLine','')}")
+          PY
+            fi
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -106,6 +139,7 @@ jobs:
           path: |
             ios-tests.log
             TestResults.xcresult
+            crashes
 
   backend:
     name: Backend (typecheck + tests)

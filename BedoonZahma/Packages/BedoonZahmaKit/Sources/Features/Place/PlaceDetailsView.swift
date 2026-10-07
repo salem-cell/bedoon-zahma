@@ -131,6 +131,7 @@ struct PlaceDetailsView: View {
                         }
                     }
                     PrimaryButton(L("place.gonow")) { goNow(p) }
+                        .accessibilityIdentifier("place.gonow")
                 }
                 .padding(.horizontal, 20).padding(.top, 16).padding(.bottom, 24)
                 .background(Color.white, in: UnevenRoundedRectangle(topLeadingRadius: 24, topTrailingRadius: 24, style: .continuous))

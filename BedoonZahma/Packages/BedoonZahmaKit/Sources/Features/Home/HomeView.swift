@@ -78,10 +78,13 @@ struct HomeView: View {
                 }
                 .buttonStyle(PressableStyle())
                 .accessibilityHint(L("home.where.hint"))
+                .accessibilityIdentifier("home.where")
 
                 HStack(spacing: 10) {
                     quickButton("☕", L("home.cafes"), BZColor.skyTint) { router.push(.nearby(kindID: "cafes")) }
+                        .accessibilityIdentifier("home.cafes")
                     quickButton("🍽️", L("home.restaurants"), BZColor.orangeTint) { router.push(.nearby(kindID: "restaurants")) }
+                        .accessibilityIdentifier("home.restaurants")
                 }
 
                 if let error = vm.error {

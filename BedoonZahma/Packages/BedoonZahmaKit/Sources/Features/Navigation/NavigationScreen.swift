@@ -156,6 +156,7 @@ struct NavigationScreen: View {
             }
             .accessibilityLabel(L("nav.voice"))
             Button(L("nav.end")) { finish() }
+                .accessibilityIdentifier("nav.end")
                 .font(BZFont.caption.weight(.bold))
                 .padding(.horizontal, 18).padding(.vertical, 10)
                 .background(BZColor.chipBg, in: Capsule())

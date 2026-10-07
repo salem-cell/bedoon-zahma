@@ -76,12 +76,16 @@ struct RouteOptionsView: View {
                         ErrorStateView(title: e.userTitle, message: e.userMessage, retryTitle: L("common.retry")) { vm.retry(trip: trip) }
                     } else if let options = trip.options {
                         ForEach(RouteStrategy.allCases) { s in
-                            if let r = options.route(for: s) { RouteCard(strategy: s, route: r, selected: trip.strategy == s) { select(s, options: options) } }
+                            if let r = options.route(for: s) {
+                                RouteCard(strategy: s, route: r, selected: trip.strategy == s) { select(s, options: options) }
+                                    .accessibilityIdentifier("route.\(s.rawValue)")
+                            }
                         }
                         if let r = trip.selectedRoute, !r.hasTrafficData {
                             Text(L("routes.notraffic")).font(BZFont.small).foregroundStyle(BZColor.mute)
                         }
                         PrimaryButton(L("routes.start")) { start() }.padding(.top, 4)
+                            .accessibilityIdentifier("routes.start")
                     }
                 }
             }

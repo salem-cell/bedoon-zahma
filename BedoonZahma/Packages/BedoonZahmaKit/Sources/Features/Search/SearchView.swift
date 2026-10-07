@@ -95,6 +95,7 @@ struct SearchView: View {
                 HStack(spacing: 10) {
                     Image(systemName: "magnifyingglass").foregroundStyle(BZColor.mute)
                     TextField(L("search.placeholder"), text: $vm.query)
+                        .accessibilityIdentifier("search.field")
                         .font(BZFont.body)
                         .focused($focused)
                         .submitLabel(.search)
@@ -131,6 +132,7 @@ struct SearchView: View {
                             Button { go { await vm.select(s) } } label: {
                                 row(icon: "mappin.circle", name: s.mainText, sub: s.secondaryText, dist: s.distanceMeters.map(formatKm))
                             }
+                            .accessibilityIdentifier("search.result.\(s.placeID)")
                         }
                     } header: { header(L("search.results"), clear: false) }
                 } else {

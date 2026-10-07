@@ -90,6 +90,7 @@ struct ScreenHeader<Trailing: View>: View {
                 .accessibilityLabel(L("common.back"))
             if let title {
                 Text(title).font(BZFont.title).lineLimit(1).minimumScaleFactor(0.8)
+                    .accessibilityIdentifier("screen.title")
             }
             Spacer(minLength: 0)
             trailing

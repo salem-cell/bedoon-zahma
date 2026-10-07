@@ -44,7 +44,9 @@ public struct MockPlacesProvider: PlacesProvider {
 
     public func searchNearby(_ r: NearbySearchRequest) async throws -> [NearbyPlace] {
         try await Task.sleep(for: .milliseconds(latencyMs))
-        let pool = r.includedTypes.contains(where: { $0.contains("restaurant") && !$0.contains("breakfast") }) ? DevFixtures.restaurants : DevFixtures.cafes
+        // قسم المقاهي يتضمن أنواع "cafe"/"coffee_shop"؛ قسم المطاعم لا.
+        let isCafes = r.includedTypes.contains("cafe") || r.includedTypes.contains("coffee_shop")
+        let pool = isCafes ? DevFixtures.cafes : DevFixtures.restaurants
         return pool.map { p in
             var c = p
             c.distanceMeters = Int(r.center.distanceMeters(to: p.coordinate))

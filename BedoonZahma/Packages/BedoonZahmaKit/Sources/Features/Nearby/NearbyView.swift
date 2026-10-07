@@ -118,6 +118,7 @@ struct NearbyView: View {
                 HStack(spacing: 8) {
                     ForEach(TravelTimeFilter.allCases) { f in
                         TimeFilterButton(L("nearby.within", f.rawValue), selected: vm.timeFilter == f) { vm.setTime(f) }
+                            .accessibilityIdentifier("nearby.time.\(f.rawValue)")
                     }
                 }
                 .padding(.horizontal, 20).padding(.top, 16)
@@ -179,6 +180,7 @@ struct NearbyView: View {
                                 env?.analytics.track(Events.placeOpened(kind: vm.kind.id))
                                 router.push(.place(placeID: p.placeID, kindID: vm.kind.id))
                             }
+                            .accessibilityIdentifier("place.card.\(p.placeID)")
                         }
                         GoogleAttributionView().frame(maxWidth: .infinity, alignment: .trailing)
                     }
