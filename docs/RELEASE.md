@@ -4,6 +4,8 @@
 
 ## الحالة الحالية (2026‑10‑07)
 
+✅ **الأرشفة والتوقيع السحابي يعملان**: تشغيل `Release to TestFlight` رقم 37680673340 أنتج أرشيف Release موقّعًا بمفتاح API، وتوقف فقط عند الرفع برسالة `Error Downloading App Information` لأن سجل التطبيق غير موجود بعد في App Store Connect.
+
 | البند | الحالة |
 |---|---|
 | مفتاح App Store Connect API (`ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_P8_BASE64`) وفريق Apple (`APPLE_TEAM_ID`) | ✅ موجودة كأسرار في المستودع |
