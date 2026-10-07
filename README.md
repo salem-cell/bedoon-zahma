@@ -84,6 +84,6 @@ powershell -File scripts/test-kit-windows.ps1
 - **الحزمة كاملة** (بما فيها شاشات SwiftUI) تُجمَّع على macOS، و36 اختبارًا تمرّ على macOS وWindows.
 - **الخادم الخلفي**: فحص الأنواع و11 اختبارًا.
 - **اختبارات الواجهة** على المحاكي بوضع DevMocks ضمن وظيفة `ios-tests`.
-- **النشر إلى TestFlight** جاهز بتوقيع سحابي (`release.yml`) — يحتاج أسرار Apple/Google مرة واحدة: انظر [docs/RELEASE.md](docs/RELEASE.md).
+- **النشر إلى TestFlight** يعمل (`release.yml`): أول بناء رُفع إلى App Store Connect بنجاح في 2026‑10‑08 بتوقيع يدوي (شهادة وملف تزويد عبر ASC API). التفاصيل: [docs/RELEASE.md](docs/RELEASE.md).
 
 ما يبقى بشريًا: إنشاء مفاتيح Apple وGoogle ونشر الخادم، ثم التجربة الميدانية في الرياض (`docs/APP_STORE_CHECKLIST.md`).

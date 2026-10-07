@@ -4,7 +4,7 @@
 
 ## الحالة الحالية (2026‑10‑07)
 
-✅ **الأرشفة والتوقيع السحابي يعملان**: تشغيل `Release to TestFlight` رقم 37680673340 أنتج أرشيف Release موقّعًا بمفتاح API، وتوقف فقط عند الرفع برسالة `Error Downloading App Information` لأن سجل التطبيق غير موجود بعد في App Store Connect.
+✅ **الرفع إلى App Store Connect نجح** (تشغيل 37696912758 — Archive Succeeded / Export Succeeded مع الرفع). ✅ **الأرشفة والتوقيع يعملان**: تشغيل `Release to TestFlight` رقم 37680673340 أنتج أرشيف Release موقّعًا بمفتاح API، وتوقف فقط عند الرفع برسالة `Error Downloading App Information` لأن سجل التطبيق غير موجود بعد في App Store Connect.
 
 | البند | الحالة |
 |---|---|
