@@ -7,6 +7,8 @@ final class BedoonZahmaUITests: XCTestCase {
     override func setUp() {
         continueAfterFailure = false
         app = XCUIApplication()
+        // الاختبارات مكتوبة بالعربية (اللغة الافتراضية للمنتج) — نُجبر المحاكي على العربية و RTL.
+        app.launchArguments += ["-AppleLanguages", "(ar)", "-AppleLocale", "ar_SA", "-AppleTextDirection", "YES"]
         app.launch()
     }
 
