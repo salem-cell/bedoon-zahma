@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "trafficWeights": { "delayPerMinute": 6, "jamPerKm": 12 },
+  "rerouteThresholds": { "minDelaySavingSeconds": 240 },
+  "flags": { "atmosphereFieldsEnabled": true }
+}

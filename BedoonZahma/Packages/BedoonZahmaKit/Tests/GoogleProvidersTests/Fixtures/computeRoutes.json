@@ -1,0 +1,46 @@
+{
+  "routes": [
+    {
+      "routeLabels": ["DEFAULT_ROUTE"],
+      "distanceMeters": 24120,
+      "duration": "1740s",
+      "staticDuration": "1440s",
+      "polyline": { "encodedPolyline": "_p~iF~ps|U_ulLnnqC_mqNvxq`@" },
+      "description": "طريق الملك فهد",
+      "legs": [
+        {
+          "steps": [
+            { "distanceMeters": 400, "staticDuration": "45s", "navigationInstruction": { "maneuver": "DEPART", "instructions": "اتجه شمالًا" } },
+            { "distanceMeters": 23720, "staticDuration": "1395s", "navigationInstruction": { "maneuver": "TURN_RIGHT", "instructions": "انعطف يمينًا" } }
+          ]
+        }
+      ],
+      "travelAdvisory": {
+        "speedReadingIntervals": [
+          { "endPolylinePointIndex": 1, "speed": "NORMAL" },
+          { "startPolylinePointIndex": 1, "endPolylinePointIndex": 2, "speed": "SLOW" },
+          { "startPolylinePointIndex": 2, "endPolylinePointIndex": 3, "speed": "TRAFFIC_JAM" }
+        ]
+      },
+      "routeToken": "CgAS...token",
+      "localizedValues": { "distance": { "text": "24.1 كم" }, "duration": { "text": "29 دقيقة" }, "staticDuration": { "text": "24 دقيقة" } }
+    },
+    {
+      "routeLabels": ["DEFAULT_ROUTE_ALTERNATE"],
+      "distanceMeters": 32000,
+      "duration": "2160s",
+      "staticDuration": "2100s",
+      "polyline": { "encodedPolyline": "_p~iF~ps|U_ulLnnqC" },
+      "travelAdvisory": { "routeRestrictionsPartiallyIgnored": true, "speedReadingIntervals": [ { "endPolylinePointIndex": 1, "speed": "NORMAL" } ] }
+    },
+    {
+      "routeLabels": ["SHORTER_DISTANCE"],
+      "distanceMeters": 19000,
+      "duration": "2040s",
+      "staticDuration": "1380s",
+      "polyline": { "encodedPolyline": "_p~iF~ps|U" },
+      "travelAdvisory": { "speedReadingIntervals": [ { "endPolylinePointIndex": 1, "speed": "TRAFFIC_JAM" } ] },
+      "routeToken": "short-token"
+    }
+  ]
+}

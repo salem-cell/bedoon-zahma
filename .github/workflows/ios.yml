@@ -1,0 +1,82 @@
+# CI على Mac سحابي (GitHub Actions macos-26 / Xcode 26) + Linux للخادم.
+# يبني تطبيق iOS للمحاكي بلا توقيع، ويشغّل اختبارات الحزمة على macOS، واختبارات الخادم.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  kit-tests-macos:
+    name: BedoonZahmaKit tests (macOS, swift test)
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Xcode version
+        run: xcodebuild -version && swift --version
+      - name: swift test
+        working-directory: BedoonZahma/Packages/BedoonZahmaKit
+        run: swift test 2>&1 | tee ../../../kit-tests.log | tail -60
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kit-tests-log
+          path: kit-tests.log
+
+  ios-build:
+    name: iOS app build (simulator, no signing)
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen & xcbeautify
+        run: brew install xcodegen xcbeautify
+      - name: Generate project
+        working-directory: BedoonZahma
+        run: xcodegen generate
+      - name: Resolve packages
+        working-directory: BedoonZahma
+        run: xcodebuild -resolvePackageDependencies -project BedoonZahma.xcodeproj -scheme BedoonZahma
+      - name: Build (Debug, iOS Simulator)
+        working-directory: BedoonZahma
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project BedoonZahma.xcodeproj \
+            -scheme BedoonZahma \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -skipPackagePluginValidation \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            2>&1 | tee ../ios-build.log | xcbeautify --renderer github-actions
+      - name: Show errors (on failure)
+        if: failure()
+        run: grep -n -E "error:|fatal error|BUILD FAILED" ios-build.log | head -80 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-build-log
+          path: ios-build.log
+
+  backend:
+    name: Backend (typecheck + tests)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm test

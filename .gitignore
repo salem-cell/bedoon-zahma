@@ -1,0 +1,27 @@
+# أسرار
+BedoonZahma/Config/Secrets.xcconfig
+backend/.env
+*.p8
+*.p12
+*.mobileprovision
+
+# Xcode
+BedoonZahma/*.xcodeproj
+BedoonZahma/*.xcworkspace
+DerivedData/
+xcuserdata/
+*.xcuserstate
+.build/
+.swiftpm/
+
+# Node
+backend/node_modules/
+backend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# أدوات محلية
+.claude/
+*.log

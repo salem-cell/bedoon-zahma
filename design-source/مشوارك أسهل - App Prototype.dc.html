@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style data-omelette-injected>html,body{background:transparent}</style><script data-omelette-injected>(()=>{{const n=new URLSearchParams(location.search).get("theme");if(n==="light"||n==="dark"){document.documentElement.dataset.theme=n}}{if(new URLSearchParams(location.search).get("_omthumb")==="1"){const n=(f)=>{const g=f.focus;if(!g)return;f.focus=function(h){g.call(this,{...h,preventScroll:true})}};n(HTMLElement.prototype);n(SVGElement.prototype);if(typeof MathMLElement!=="undefined"){n(MathMLElement.prototype)}const d=(f)=>{f.removeAttribute("autofocus");f.inert=true;if(!(f instanceof HTMLElement))f.removeAttribute("tabindex")};const p=(f)=>{if(f.hasAttribute("autofocus"))d(f);for(const g of f.querySelectorAll("[autofocus]")){d(g)}};p(document.documentElement);new MutationObserver((f)=>{for(const g of f){for(const h of g.addedNodes){if(h.nodeType===1)p(h)}}}).observe(document,{childList:true,subtree:true})}}{const n=()=>{try{if(document.querySelector('meta[name="color-scheme"]'))return;const d=getComputedStyle(document.documentElement).getPropertyValue("color-scheme").trim();if(d&&d!=="normal")return;const p=(y)=>{if(!y)return null;const m=getComputedStyle(y).backgroundColor.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([\d.]+%?))?\s*\)$/);if(!m)return null;const w=m[4]==null?1:parseFloat(m[4])/(m[4].endsWith("%")?100:1);if(w<0.99)return null;return[+m[1],+m[2],+m[3]]};const f=p(document.body)||p(document.documentElement);if(!f)return;const g=(y)=>{const m=y/255;return m<=0.04045?m/12.92:((m+0.055)/1.055)**2.4};const h=0.2126*g(f[0])+0.7152*g(f[1])+0.0722*g(f[2]);document.documentElement.style.setProperty("color-scheme",h<0.4?"dark":"light")}catch{}};if(document.readyState==="complete")n();else window.addEventListener("load",n)}var I=[];var B=false;var K=false;var C=()=>{};if(K===true){try{const n=setTimeout.bind(window);const d=1e4;const p=15;const f=1e4;const g=120000;const h=200;const y=(o)=>{try{let r;if(typeof o==="string")r=o;else if(o instanceof URL)r=o.href;else if(typeof Request!=="undefined"&&o instanceof Request)r=o.url;else return null;if(!r)return null;const l=document.baseURI;const i=new URL(r,l);if(i.protocol!=="http:"&&i.protocol!=="https:")return null;if(i.origin!==new URL(l).origin)return null;return i.origin+i.pathname}catch{return null}};const m=new Map;const w=(o)=>{let r=m.get(o);if(!r){if(m.size>=h){const l=m.keys().next().value;if(l!==undefined)m.delete(l)}r={fails:[],until:0,cooldown:f,hard:false};m.set(o,r)}return r};const R=(o)=>{const r=m.get(o);return r!==undefined&&r.until>Date.now()};const O=(o,r)=>{const l=Date.now();const i=w(o);if(r)i.hard=true;if(i.until>l)return;i.fails.push(l);while(i.fails.length>0&&i.fails[0]<=l-d)i.fails.shift();if(i.fails.length>=p){i.until=l+i.cooldown;if(i.hard)i.cooldown=Math.min(i.cooldown*2,g);i.fails.length=0;try{n(()=>{try{S(true)}catch{}},i.until-l+100)}catch{}console.warn("[omelette] asset circuit breaker: pausing requests to "+o+" for "+Math.round((i.until-l)/1000)+"s after "+p+" failures in "+d/1000+"s")}};const e=(o)=>{m.delete(o)};const t=100;const a=new WeakMap;const u=new Set;let s=null;const S=(o)=>{for(const r of Array.from(u)){try{const l=a.get(r);if(l===undefined){u.delete(r);continue}if(o){const i=y(l);if(i!==null&&R(i))continue}a.delete(r);u.delete(r);if(s!==null)s.call(r,l)}catch{}}};C=()=>{try{m.clear();S(false)}catch{}};document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")C()});const _=window.fetch;if(typeof _==="function"){const o=function(...r){let l=null;try{l=y(r[0])}catch{}if(l!==null&&R(l)){let c;try{if(r[1]&&r[1].signal!==undefined){c=r[1].signal||undefined}else if(typeof Request!=="undefined"&&r[0]instanceof Request){c=r[0].signal||undefined}}catch{c=undefined}return new Promise((k,b)=>{const E=()=>{try{return c.reason!==undefined?c.reason:new DOMException("The operation was aborted.","AbortError")}catch{return new DOMException("The operation was aborted.","AbortError")}};try{if(c&&c.aborted){b(E());return}}catch{}let T=false;const j=()=>{if(T)return;T=true;b(E())};try{if(c)c.addEventListener("abort",j,{once:true})}catch{}n(()=>{if(T)return;T=true;try{if(c)c.removeEventListener("abort",j)}catch{}let L;try{L=new Response(null,{status:429,statusText:"Too Many Requests",headers:{"Retry-After":"10"}})}catch{L={ok:false,status:429}}k(L)},250)})}const i=_.apply(window,r);if(l!==null){const c=l;i.then((k)=>{try{if(k.ok)e(c);else if(k.status===401||k.status===403||k.status===404||k.status===429){O(c,k.status!==404)}}catch{}},()=>{})}return i};window.fetch=o}const v=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,"src");if(v!==undefined&&v.set!==undefined&&v.get!==undefined){const o=v.set;s=o;Object.defineProperty(HTMLImageElement.prototype,"src",{configurable:true,enumerable:v.enumerable,get:v.get,set(r){const l=`${r}`;try{const i=y(l);if(i!==null&&R(i)){a.set(this,l);if(u.size<t)u.add(this);return}}catch{}try{a.delete(this);u.delete(this)}catch{}o.call(this,l)}})}try{const o=HTMLImageElement.prototype.setAttribute;HTMLImageElement.prototype.setAttribute=function(r,l){if(arguments.length<2){o.apply(this,arguments);return}if(typeof r==="string"&&r.toLowerCase()==="src"){const i=`${l}`;try{const c=y(i);if(c!==null&&R(c)){a.set(this,i);if(u.size<t)u.add(this);return}a.delete(this);u.delete(this)}catch{}o.call(this,r,i);return}o.call(this,r,l)}}catch{}window.addEventListener("error",(o)=>{try{const r=o.target;if(r instanceof HTMLImageElement){const l=y(r.currentSrc||r.src||"");if(l!==null)O(l,true)}}catch{}},true);window.addEventListener("load",(o)=>{try{const r=o.target;if(r instanceof HTMLImageElement){const l=y(r.currentSrc||r.src||"");if(l!==null)e(l);const i=a.get(r);if(i!==undefined){let c=false;try{c=new URL(i,document.baseURI).href===new URL(r.currentSrc||r.src||"",document.baseURI).href}catch{c=false}if(c){a.delete(r);u.delete(r)}}}}catch{}},true)}catch{}}var J=30000;var G=3000;document.addEventListener("DOMContentLoaded",()=>{const n=window.Babel;const d="om-src-id";if(n&&n.registerPlugin&&!(n.availablePlugins&&n.availablePlugins[d])){n.registerPlugin(d,({types:h})=>({visitor:{JSXOpeningElement(y,m){const w=y.node;if(w.name&&w.name.type==="JSXMemberExpression")return;for(let t=0;t<w.attributes.length;t++){const a=w.attributes[t];if(a.type==="JSXAttribute"&&a.name&&a.name.name==="data-om-id")return}const R=m.file&&m.file.opts&&m.file.opts.filename||"?";const O=w.loc&&w.loc.start;const e=`jsx:${R}:${w.start??0}:${O?O.line:0}:${O?O.column+1:0}`;w.attributes.push(h.jsxAttribute(h.jsxIdentifier("data-om-id"),h.stringLiteral(e)))}}}))}const p="om-text-extract";let f=false;if(B&&n&&n.registerPlugin&&!(n.availablePlugins&&n.availablePlugins[p])){const h=window.React;if(h&&h.useSyncExternalStore&&h.createElement){f=true;const y={};const m=new Set;let w=0;window.__omTextO=y;window.__omTextSet=(e)=>{for(const t in e){const a=e[t];if(a==null)delete y[t];else y[t]=a}w++;m.forEach((t)=>t())};const R=(e)=>{m.add(e);return()=>m.delete(e)};const O=()=>w;window.__OmT=function e(t){h.useSyncExternalStore(R,O,O);return h.createElement("span",{"data-om-text":t.i,className:"__om-t"},t.i in y?y[t.i]:t.children)};n.registerPlugin(p,({types:e})=>{const t={style:1,script:1,noscript:1,textarea:1,title:1,option:1,text:1,tspan:1,textPath:1};const a={placeholder:1,alt:1,title:1,label:1,"aria-label":1,"aria-description":1,"aria-placeholder":1};const u=(o,r)=>e.logicalExpression("??",e.memberExpression(e.logicalExpression("||",e.memberExpression(e.identifier("window"),e.identifier("__omTextO")),e.objectExpression([])),e.stringLiteral(o),true),r);const s=(o)=>o.file&&o.file.opts&&o.file.opts.filename||"?";const S=(o)=>o.file&&o.file.code||"";const _=(o,r)=>{const l=(c)=>c&&c.start!=null&&c.end!=null&&(c.type==="StringLiteral"||c.type==="TemplateLiteral"&&c.expressions.length===0)?[c.start,c.end]:null;const i=l(r);if(i)return i;if(r&&r.type==="Identifier"){const c=o.scope.getBinding(r.name);if(c&&c.constant&&c.path.node.type==="VariableDeclarator"){return l(c.path.node.init)}}return null};const v=(o,r,l)=>{const i=o.node;let c=false;const k=(E,T)=>{c=true;return e.jsxElement(e.jsxOpeningElement(e.jsxIdentifier("__OmT"),[e.jsxAttribute(e.jsxIdentifier("i"),e.stringLiteral(E))],false),e.jsxClosingElement(e.jsxIdentifier("__OmT")),[T],false)};const b=i.children.map((E)=>{if(E.type==="JSXText"){if(E.start==null||E.end==null)return E;const T=l.slice(E.start,E.end);const j=T.length-T.trimStart().length;const L=T.length-T.trimEnd().length;if(j+L>=T.length)return E;return k(`txt:${r}:${E.start+j}:${E.end-L}`,E)}if(E.type==="JSXExpressionContainer"){const T=_(o,E.expression);if(T)return k(`str:${r}:${T[0]}:${T[1]}`,E)}return E});if(c)i.children=b};return{visitor:{JSXOpeningElement(o,r){const l=o.node;const i=s(r);const c={};for(let k=0;k<l.attributes.length;k++){const b=l.attributes[k];if(b.type!=="JSXAttribute"||!b.name)continue;const E=b.name.name;if(!a[E])continue;if(!b.value||b.value.type!=="StringLiteral")continue;if(b.value.start==null||b.value.end==null)continue;const T=`txt:${i}:${b.value.start}:${b.value.end}`;c[E]=T;b.value=e.jsxExpressionContainer(u(T,e.stringLiteral(b.value.value)))}if(Object.keys(c).length){l.attributes.push(e.jsxAttribute(e.jsxIdentifier("data-om-text-attrs"),e.stringLiteral(JSON.stringify(c))))}},JSXElement(o,r){const l=o.node.openingElement;const i=l&&l.name&&l.name.name;if(i==="__OmT")return;if(typeof i==="string"&&t[i])return;v(o,s(r),S(r))},JSXFragment(o,r){v(o,s(r),S(r))}}}})}}const g=f?["transform-react-jsx-source",d,p]:["transform-react-jsx-source",d];document.querySelectorAll('script[type="text/babel"],script[type="text/jsx"]').forEach((h,y)=>{const m=h.getAttribute("data-plugins")||"";const w=g.filter((R)=>m.indexOf(R)<0);if(w.length){h.setAttribute("data-plugins",m?`${m},${w.join(",")}`:w.join(","))}if(!h.hasAttribute("data-filename")){h.setAttribute("data-filename",h.getAttribute("src")||`inline-${y}`)}})});var A=window.parent;var U="not editable here — open the project in the Claude Design editor to save";var W=()=>Promise.resolve({persisted:false,noHost:true,reason:U});var H=W;var M="data/storage.json";var z=()=>{try{const n=new URL(document.baseURI);const d=n.pathname.match(/\/projects\/([^/]+)\/serve\//);if(d)return d[1];return n.hostname.split(".")[0]||""}catch{return location.hostname.split(".")[0]||""}};var Z=()=>{try{const n=new URL(document.baseURI);const d=n.pathname.indexOf("/serve/");if(d>=0)return n.origin+n.pathname.slice(0,d+"/serve/".length)+M}catch{}return"./"+M};var x=null;var N=()=>{if(!x){x=fetch(Z(),{cache:"no-store"}).then((n)=>{if(n.ok)return n.text();return n.status===404?"":null}).catch(()=>null).then((n)=>{if(n===null){x=null;return null}const d=new Map;if(!n)return d;let p;try{p=JSON.parse(n)}catch{console.warn("[omelette.storage] "+M+" is not valid JSON; treating the store as unreadable so a save cannot overwrite the "+"hand-edited bytes. Fix the JSON (or delete the file) to re-enable persistence.");x=null;return null}if(p===null||typeof p!=="object"||Array.isArray(p)){console.warn("[omelette.storage] "+M+" doesn't hold a JSON object; treating the store as unreadable so a save cannot "+"overwrite the hand-edited bytes. Make the top level a JSON object to re-enable persistence.");x=null;return null}const f=p;if("data"in f){const g=f.data;if(g===null||typeof g!=="object"||Array.isArray(g)){console.warn("[omelette.storage] "+M+' has a "data" field that is not a JSON object; treating the store as unreadable so a '+'save cannot overwrite the hand-edited bytes. Make "data" a JSON object to re-enable persistence.');x=null;return null}const h=f._meta;const y=h!==null&&typeof h==="object"?h.project:undefined;if(typeof y==="string"&&y!==""&&y!==z())return d;for(const m of Object.keys(g))d.set(m,g[m]);return d}for(const g of Object.keys(f)){if(g!=="_meta")d.set(g,f[g])}return d})}return x};var F=(n)=>H(M,JSON.stringify({_meta:{project:z(),version:1},data:Object.fromEntries(n)},null,2));var D=Promise.resolve();var $=(n)=>{const d=D.then(n);D=d.then(()=>{return},()=>{return});return d};var V=/sk-(?:ant-)?[A-Za-z0-9_-]{16,}|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|xox[a-z]-[A-Za-z0-9][A-Za-z0-9-]{9,}|AIza[0-9A-Za-z_-]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----/;var Y=/password|passwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token|credential/i;var Q=(n,d,p)=>{if(V.test(d)||Y.test(n)&&typeof p==="string"&&p.length>=8){console.warn('[omelette.storage] the value for "'+n+'" looks like a credential. The storage file is a plaintext project file — visible to '+"everyone with project access and copied when the project is duplicated. Do not store secrets here.")}};var q={persisted:false,reason:"could not load the existing store — not overwriting it"};var X={persisted:false,reason:"stored value changed since a failed read — re-read this key before saving"};var P=new Set;var ee={get:(n)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.get: key must be a string"))}return $(N).then((d)=>{if(d===null){P.add(n);return null}P.delete(n);if(!d.has(n))return null;const p=d.get(n);return p==null?null:JSON.parse(JSON.stringify(p))})},set:(n,d)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.set: key must be a string"))}let p;try{p=JSON.stringify(d)}catch(g){return Promise.reject(new TypeError("storage.set: value must be JSON-serializable ("+String(g)+")"))}if(p===undefined){return Promise.reject(new TypeError("storage.set: value must be JSON-serializable"))}Q(n,p,d);const f=JSON.parse(p);return $(()=>N().then((g)=>{if(g===null)return q;if(P.has(n)){if(g.has(n))return X;P.delete(n)}g.set(n,f);return F(g)}))},delete:(n)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.delete: key must be a string"))}return $(()=>N().then((d)=>{if(d===null)return q;if(P.has(n)){if(d.has(n))return X;P.delete(n)}d.delete(n);return F(d)}))},keys:()=>$(N).then((n)=>n===null?[]:Array.from(n.keys()))};window.omelette={writeFile:(n,d)=>H(n,d).then((p)=>{if(!p.persisted&&!p.noHost){throw new Error(p.reason||"write failed")}}),storage:ee};if(A&&A!==window){const n=(e,t)=>{try{A.postMessage({__omelette_log:true,type:e,data:t},"*")}catch{}};["log","warn","error"].forEach((e)=>{const t=console[e];console[e]=(...a)=>{const u=a.map((s)=>{try{return typeof s==="object"?JSON.stringify(s):String(s)}catch{try{return String(s)}catch{return"[unstringifiable]"}}}).join(" ");n(e,u);t.apply(console,a)}});window.addEventListener("error",(e)=>{const t=e.target;if(t&&t!==window&&t.tagName){const a=t.src||t.href||"";n("resource_error",`${t.tagName} failed to load: ${a}`)}else{n("error",`${e.message||"Unknown error"} at ${e.filename||"?"}:${e.lineno||0}:${e.colno||0}`)}},true);window.addEventListener("unhandledrejection",(e)=>{const t=e.reason;const a=t instanceof Error?`${t.message} ${t.stack}`:String(t);n("error",`Unhandled rejection: ${a}`)});window.addEventListener("click",(e)=>{if(e.defaultPrevented||e.button!==0)return;if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;const t=e.composedPath?e.composedPath():[];const a=["button","input","select","textarea","summary","label"];let u=null;for(const v of t){if(!(v instanceof Element))continue;if(v.localName==="a"){if(!(v instanceof HTMLAnchorElement))return;u=v;break}if(a.indexOf(v.localName)!==-1)return}if(!u)return;if(u.isContentEditable)return;const s=u.closest("[contenteditable]");if(s&&s.getAttribute("contenteditable")!=="false")return;const S=(u.getAttribute("target")||"_self").toLowerCase();if(S!=="_self"&&S!=="_top"&&S!=="_parent")return;let _;try{_=new URL(u.href)}catch{return}if(_.protocol!=="http:"&&_.protocol!=="https:")return;if(location.origin==="null")return;if(_.origin===location.origin)return;e.preventDefault();window.open(_.href,"_blank","noopener,noreferrer")});const d=()=>{try{A.postMessage({type:"omelette:height",height:document.documentElement.scrollHeight},"*")}catch{}};if(window.ResizeObserver)new ResizeObserver(d).observe(document.documentElement);const p=()=>{d();if(!document.querySelector('script[type="text/babel"],script[type="text/jsx"]'))return;const e=()=>document.getElementById("root")||document.querySelector("body > div[id]");const t=e()?.firstElementChild??null;let a=0;const u=()=>{const s=e();if(s&&s.firstElementChild!==t||++a>30){d();return}setTimeout(u,100)};setTimeout(u,100)};if(document.readyState==="complete")p();else window.addEventListener("load",p);const f={};let g=0;const h=(e)=>new Promise((t,a)=>{if(!I.length){a(new Error("claude.complete: no parent origin"));return}const u=`c${++g}`;const s=()=>setTimeout(()=>{delete f[u];a(new Error(`claude.complete: no data for ${J/1000}s`))},J);const S=s();f[u]={resolve:t,reject:a,text:"",t:S,arm:s};try{for(const _ of I){A.postMessage({__om_api:true,id:u,body:e},_)}}catch(_){clearTimeout(S);delete f[u];a(_)}});const y=8;const m=async(e,t)=>{if(!Array.isArray(e.messages)){throw new Error("claude.complete: tools require a messages array")}const a=e.messages.slice();const u={...e,tools:e.tools.map((_)=>{if(_===null||typeof _!=="object")return _;const v={};for(const o of Object.keys(_)){if(typeof _[o]!=="function")v[o]=_[o]}return v})};const s=u.tool_choice;const S=s!=null&&(s.type==="any"||s.type==="tool")?{...u,tool_choice:s.disable_parallel_tool_use!==undefined?{type:"auto",disable_parallel_tool_use:s.disable_parallel_tool_use}:{type:"auto"}}:u;for(let _=0;_<y;_++){const v=await h({..._===0?u:S,messages:a});const o=v.message;const r=o&&Array.isArray(o.content)?o.content:null;const l=r?r.filter((c)=>c?.type==="tool_use"):[];if(o?.stop_reason!=="tool_use"||l.length===0){return v.text}const i=[];for(const c of l){const k=t.get(c.name);if(!k){i.push({type:"tool_result",tool_use_id:c.id,content:`no handler for tool "${c.name}"`,is_error:true});continue}try{const b=await k(c.input);const E=typeof b==="string"?b:O(b)??"";i.push({type:"tool_result",tool_use_id:c.id,content:E})}catch(b){i.push({type:"tool_result",tool_use_id:c.id,content:String(b?.message??b??"tool handler failed"),is_error:true})}}a.push({role:"assistant",content:r},{role:"user",content:i})}throw new Error(`claude.complete: exceeded ${y} tool turns`)};window.claude={complete(e){const t=e;if(t!==null&&typeof t==="object"&&Array.isArray(t.tools)&&t.tools.some((a)=>a!==null&&typeof a==="object"&&typeof a.run==="function")){const a=new Map;for(const u of t.tools){if(u!==null&&typeof u==="object"&&typeof u.run==="function"){a.set(String(u.name),u.run)}}return m(t,a)}return h(e).then((a)=>a.text)}};const w={};let R=0;H=(e,t)=>new Promise((a)=>{if(!I.length){a({persisted:false,noHost:true,reason:U});return}const u=`f${++R}`;const s=setTimeout(()=>{delete w[u];a({persisted:false,noHost:true,reason:U})},G);w[u]={settle:a,t:s};try{for(const S of I){A.postMessage({__om_file:true,id:u,op:"write",path:e,content:t},S)}}catch{clearTimeout(s);delete w[u];a({persisted:false,noHost:true,reason:U})}});const O=(e)=>{try{return JSON.stringify(e)}catch{return JSON.stringify(String(e))}};window.addEventListener("message",(e)=>{if(I.indexOf(e.origin)<0)return;if(e.source!==A)return;const t=e.data;if(!t)return;if(t.type==="omelette-preview-refresh"){if(typeof t.token!=="string"||!/^[0-9a-f.-]+(\.(rc|pr-[0-9]+))?(\.[0-9]+\.[0-9a-f]{16})?$/.test(t.token))return;const s=Math.max(1,Math.floor((t.expiresAt||0)-Date.now()/1000));document.cookie="__Host-omelette-preview="+t.token+"; Path=/; Secure; SameSite=None; Partitioned; Max-Age="+s;C();return}if(t.__om_file_r){const s=w[t.id];if(!s)return;clearTimeout(s.t);delete w[t.id];s.settle(t.ok?{persisted:true}:{persisted:false,reason:t.error||"write failed"});return}if(t.__om_api_r){const s=f[t.id];if(!s)return;if(t.error!=null){clearTimeout(s.t);delete f[t.id];s.reject(new Error(t.error));return}if(t.chunk!=null){clearTimeout(s.t);s.t=s.arm();s.text+=t.chunk;return}if(t.done){clearTimeout(s.t);delete f[t.id];s.resolve({text:t.text!=null?t.text:s.text,message:t.message});return}return}if(!t.__om_eval)return;const a=t;const u=(s)=>{e.source.postMessage({...s,__om_eval_r:1,id:a.id},e.origin)};try{const s=(0,eval)(a.code);if(s&&typeof s.then==="function"){s.then((S)=>u({ok:1,v:O(S)}),(S)=>u({ok:0,e:String(S)}))}else{u({ok:1,v:O(s)})}}catch(s){u({ok:0,e:String(s)})}})}})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EDEBE6;}
+a{color:#0E1C22}a:hover{color:#15B98F}
+@keyframes bz-pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.6);opacity:0}}
+</style>
+</helmet>
+<div dir="rtl" style="min-height:100vh;display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;justify-content:center;padding:40px 24px;box-sizing:border-box;font-family:'Noto Kufi Arabic',sans-serif;color:#0E1C22">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="bz" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" style="stroke-width:10;stroke-linecap:round;stroke-linejoin:round"><path d="M19.1 58.3 A32 32 0 1 1 41.7 80.9"></path><path d="M12 88 L50 50"></path><circle cx="50" cy="50" r="7" fill="currentColor" stroke="none"></circle></g></symbol>
+</defs></svg>
+
+<!-- side panel -->
+<div style="width:340px;max-width:100%;display:flex;flex-direction:column;gap:20px">
+  <div style="display:flex;align-items:center;gap:14px"><svg viewBox="0 0 100 100" width="44" height="44" style="color:#15B98F"><use href="#bz"></use></svg><div><div style="font-size:26px;font-weight:800;line-height:1.2">مشوارك أسهل</div><div style="font-size:13px;color:#6B7A78">اختر كيف تبي توصل · هوية «بوابة الوصول»</div></div></div>
+  <div style="background:#fff;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;color:#6B7A78;direction:ltr;text-align:right">SCREENS</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <sc-for list="{{ navBtns }}" as="b" hint-placeholder-count="7">
+        <button onClick="{{ b.on }}" style="border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.color }};border-radius:999px;padding:7px 14px;font-size:13px;font-family:inherit;font-weight:600;cursor:pointer">{{ b.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="background:#fff;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.8;color:#2B3B3F">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;color:#6B7A78;direction:ltr;text-align:right">FLOWS</div>
+    <div><b>الملاحة:</b> وين رايح؟ ← البوليفارد ← 3 طرق ← ابدأ ← ملاحة ← «لقينا لك طريق أهدأ».</div>
+    <div><b>الاكتشاف:</b> مقاهيي ← 5/10/15 دقيقة ← ترتيب ← تفاصيل ← اذهب الآن ← 3 طرق.</div>
+  </div>
+  <div style="background:#0E1C22;color:#fff;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px;font-size:13px;line-height:1.8">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;color:#8FA3A0;direction:ltr;text-align:right">NOTE</div>
+    <div>الهوية: اتجاه «بوابة الوصول» من استكشاف مشوارك أسهل (الرمز، أخضر المسار #15B98F، سماء #20A6D8، برتقالي #F2994A للتنبيهات والتقييمات، ليل #0E1C22، Noto Kufi Arabic). نموذج تفاعلي ببيانات توضيحية. الخرائط والأماكن والطرق في المنتج الفعلي من Google Maps Platform. «الأفضل حولي» هنا يستخدم ترتيبًا بايزيًا فعليًا (m = 500).</div>
+  </div>
+</div>
+
+<!-- phone -->
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div dir="rtl" style="position:relative;width:100%;height:100%;font-family:'Noto Kufi Arabic',sans-serif;color:#0E1C22;overflow:hidden;background:#EEF1EF">
+
+<!-- HOME -->
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0">
+  <svg viewBox="0 0 402 874" width="100%" height="100%" style="position:absolute;inset:0" preserveAspectRatio="none">
+    <g stroke="#fff" fill="none" style="stroke-width:18;stroke-linecap:round"><path d="M-10 200 H420"></path><path d="M-10 430 H420"></path><path d="M-10 660 H420"></path><path d="M110 -10 V890"></path><path d="M290 -10 V890"></path></g>
+    <g stroke="#DFE4E1" fill="none" style="stroke-width:6"><path d="M-10 315 H420"></path><path d="M-10 545 H420"></path><path d="M200 -10 V890"></path><path d="M-10 770 H420"></path></g>
+    <rect x="130" y="220" width="52" height="76" rx="8" fill="#E2E7E4"></rect><rect x="310" y="450" width="80" height="60" rx="8" fill="#E2E7E4"></rect><rect x="20" y="560" width="70" height="80" rx="8" fill="#E2E7E4"></rect><rect x="215" y="690" width="60" height="60" rx="8" fill="#DCE6DF"></rect>
+  </svg>
+  <div style="position:absolute;left:50%;top:56%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#15B98F;border:3px solid #fff;box-shadow:0 2px 10px rgba(14,28,34,.25)"></div>
+  <div style="position:absolute;left:50%;top:56%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#15B98F;animation:bz-pulse 2s ease-out infinite"></div>
+  <div style="position:absolute;top:62px;left:20px;right:20px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:10px"><svg viewBox="0 0 100 100" width="34" height="34" style="color:#0E1C22"><use href="#bz"></use></svg><span style="font-size:22px;font-weight:800;white-space:nowrap">مشوارك أسهل</span></div>
+      <div onClick="{{ goFavs }}" style="width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 4px 16px rgba(14,28,34,.1);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer">♡</div>
+    </div>
+    <div onClick="{{ goSearch }}" style="background:#fff;border-radius:20px;padding:18px 20px;box-shadow:0 8px 30px rgba(14,28,34,.12);display:flex;align-items:center;gap:12px;cursor:pointer">
+      <div style="width:12px;height:12px;border-radius:50%;border:3px solid #15B98F;flex-shrink:0"></div>
+      <span style="font-size:19px;font-weight:700;color:#0E1C22">وين رايح؟</span>
+    </div>
+    <div style="display:flex;gap:10px">
+      <div onClick="{{ goCafes }}" style="flex:1;background:#E3F3FA;border-radius:16px;padding:14px 16px;box-shadow:0 4px 16px rgba(14,28,34,.08);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px"><span>☕</span><span>مقاهيي</span></div>
+      <div onClick="{{ goRestaurants }}" style="flex:1;background:#FDEEDF;border-radius:16px;padding:14px 16px;box-shadow:0 4px 16px rgba(14,28,34,.08);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px"><span>🍽️</span><span>مطاعمي</span></div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:52px;left:20px;font-family:'DM Mono',monospace;font-size:10px;color:#6B7A78;direction:ltr">Map data ©Google</div>
+</div>
+</sc-if>
+
+<!-- SEARCH -->
+<sc-if value="{{ isSearch }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#FAF8F4;display:flex;flex-direction:column;padding-top:60px">
+  <div style="padding:0 20px;display:flex;align-items:center;gap:10px">
+    <div onClick="{{ goHome }}" style="width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0">→</div>
+    <div style="flex:1;min-width:0;background:#fff;border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:10px;border:2px solid #15B98F"><span style="font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ query }}</span><span style="width:2px;height:22px;background:#15B98F"></span></div>
+  </div>
+  <div style="padding:20px 20px 0;display:flex;gap:10px">
+    <div onClick="{{ pickHome }}" style="flex:1;background:#fff;border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;cursor:pointer"><span style="font-size:12px;color:#6B7A78">المنزل</span><span style="font-size:14px;font-weight:700">حي النرجس</span></div>
+    <div onClick="{{ pickWork }}" style="flex:1;background:#fff;border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;cursor:pointer"><span style="font-size:12px;color:#6B7A78">العمل</span><span style="font-size:14px;font-weight:700">طريق الملك فهد</span></div>
+    <div style="flex:1;background:#fff;border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;cursor:pointer"><span style="font-size:12px;color:#6B7A78">اختيار</span><span style="font-size:14px;font-weight:700">من الخريطة</span></div>
+  </div>
+  <div style="padding:22px 20px 8px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:#6B7A78;font-weight:600">{{ resultsTitle }}</span><span style="font-size:12px;color:#6B7A78;cursor:pointer;white-space:nowrap">مسح السجل</span></div>
+  <div style="display:flex;flex-direction:column">
+    <sc-for list="{{ results }}" as="r" hint-placeholder-count="4">
+      <div onClick="{{ r.on }}" style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid #EDEBE6;cursor:pointer">
+        <div style="width:40px;height:40px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;color:#6B7A78;flex-shrink:0">{{ r.icon }}</div>
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span><span style="font-size:12px;color:#6B7A78">{{ r.sub }}</span></div>
+        <span style="font-size:12px;color:#6B7A78;font-family:'DM Mono',monospace;direction:ltr;white-space:nowrap;flex-shrink:0">{{ r.dist }}</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="margin-top:auto;background:#D9DCDE;height:290px;display:grid;grid-template-columns:repeat(10,1fr);gap:6px;padding:10px 6px 40px;box-sizing:border-box;direction:ltr">
+    <sc-for list="{{ keys }}" as="k" hint-placeholder-count="30"><div onClick="{{ k.on }}" style="background:#fff;border-radius:6px;height:42px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;grid-column:span {{ k.span }}">{{ k.ch }}</div></sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ROUTES -->
+<sc-if value="{{ isRoutes }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0">
+  <svg viewBox="0 0 402 874" width="100%" height="100%" style="position:absolute;inset:0" preserveAspectRatio="none">
+    <g stroke="#fff" fill="none" style="stroke-width:18;stroke-linecap:round"><path d="M-10 200 H420"></path><path d="M-10 430 H420"></path><path d="M110 -10 V890"></path><path d="M290 -10 V890"></path></g>
+    <g stroke="#DFE4E1" fill="none" style="stroke-width:6"><path d="M-10 315 H420"></path><path d="M200 -10 V890"></path></g>
+    <path d="M200 520 H110 V200 H290 V110" fill="none" stroke="{{ rt.a.stroke }}" opacity="{{ rt.a.op }}" style="stroke-width:{{ rt.a.sw }};stroke-linecap:round;stroke-linejoin:round"></path>
+    <path d="M200 520 V315 H290 V110" fill="none" stroke="{{ rt.b.stroke }}" opacity="{{ rt.b.op }}" style="stroke-width:{{ rt.b.sw }};stroke-linecap:round;stroke-linejoin:round"></path>
+    <path d="M200 520 V200 H290 V110" fill="none" stroke="{{ rt.c.stroke }}" opacity="{{ rt.c.op }}" style="stroke-width:{{ rt.c.sw }};stroke-linecap:round;stroke-linejoin:round"></path>
+    <circle cx="200" cy="520" r="10" fill="#15B98F" stroke="#fff" style="stroke-width:3"></circle>
+    <circle cx="290" cy="110" r="12" fill="none" stroke="#0E1C22" style="stroke-width:5"></circle>
+  </svg>
+  <div style="position:absolute;top:62px;left:20px;right:20px;display:flex;align-items:center;gap:10px">
+    <div onClick="{{ goSearch }}" style="width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 4px 16px rgba(14,28,34,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0">→</div>
+    <div style="flex:1;background:#fff;border-radius:16px;padding:12px 16px;box-shadow:0 4px 16px rgba(14,28,34,.1);display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;color:#6B7A78">الوجهة</span><span style="font-size:16px;font-weight:700">{{ dest }}</span></div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;padding:14px 20px 50px;box-shadow:0 -10px 40px rgba(14,28,34,.12);display:flex;flex-direction:column;gap:12px">
+    <div style="width:40px;height:5px;border-radius:3px;background:#DCE1DF;margin:0 auto 4px"></div>
+    <sc-for list="{{ routeCards }}" as="r" hint-placeholder-count="3">
+      <div onClick="{{ r.on }}" style="border:2px solid {{ r.border }};background:{{ r.bg }};border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer">
+        <div style="width:12px;height:40px;border-radius:6px;background:{{ r.color }};flex-shrink:0"></div>
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">{{ r.emoji }}</span><span style="font-size:17px;font-weight:800;white-space:nowrap">{{ r.label }}</span></div>
+          <span style="font-size:12px;color:#6B7A78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.traffic }} · {{ r.hoods }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0;min-width:84px"><span style="font-size:20px;font-weight:800;white-space:nowrap">{{ r.min }} <span style="font-size:12px;font-weight:600">دقيقة</span></span><span style="font-size:12px;color:#6B7A78">{{ r.km }} كم</span></div>
+      </div>
+    </sc-for>
+    <div onClick="{{ startNav }}" style="margin-top:4px;background:#15B98F;color:#0E1C22;border-radius:18px;padding:18px;text-align:center;font-size:18px;font-weight:800;cursor:pointer">ابدأ</div>
+  </div>
+</div>
+</sc-if>
+
+<!-- NAV -->
+<sc-if value="{{ isNav }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#12343E">
+  <svg viewBox="0 0 402 874" width="100%" height="100%" style="position:absolute;inset:0" preserveAspectRatio="none">
+    <g stroke="#1E4551" fill="none" style="stroke-width:22;stroke-linecap:round"><path d="M-10 260 H420"></path><path d="M-10 520 H420"></path><path d="M120 -10 V890"></path><path d="M300 -10 V890"></path></g>
+    <g stroke="#193E49" fill="none" style="stroke-width:6"><path d="M-10 390 H420"></path><path d="M210 -10 V890"></path></g>
+    <path d="M201 700 V520 H300 V260 H120" fill="none" stroke="#15B98F" style="stroke-width:12;stroke-linecap:round;stroke-linejoin:round"></path>
+    <circle cx="201" cy="700" r="16" fill="#15B98F" stroke="#fff" style="stroke-width:4"></circle>
+  </svg>
+  <div style="position:absolute;top:62px;left:16px;right:16px;background:#fff;border-radius:22px;padding:16px 18px;display:flex;align-items:center;gap:16px;box-shadow:0 10px 40px rgba(0,0,0,.3)">
+    <div style="width:64px;height:64px;border-radius:18px;background:#20A6D8;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:30px;color:#fff;font-weight:800">↰</div>
+    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:28px;font-weight:800;line-height:1.1">{{ navDist }}</span><span style="font-size:15px;font-weight:600">انعطف يسارًا إلى طريق الأمير تركي</span></div>
+  </div>
+  <sc-if value="{{ reroute }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;top:170px;left:16px;right:16px;background:#F2994A;border-radius:22px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;color:#0E1C22;box-shadow:0 10px 40px rgba(0,0,0,.3)">
+    <div style="font-size:18px;font-weight:800">لقينا لك طريق أهدأ</div>
+    <div style="display:flex;gap:10px">
+      <div style="flex:1;background:rgba(14,28,34,.1);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;font-weight:600">الحالي</span><span style="font-size:16px;font-weight:800">18 دقيقة</span><span style="font-size:11px">6 دقائق زحمة</span></div>
+      <div style="flex:1;background:#fff;color:#0E1C22;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;font-weight:600;color:#6B7A78">البديل</span><span style="font-size:16px;font-weight:800">21 دقيقة</span><span style="font-size:11px;color:#0E8F6E">زحمة شبه معدومة</span></div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <div onClick="{{ acceptReroute }}" style="flex:1;background:#20A6D8;color:#fff;border-radius:12px;padding:12px;text-align:center;font-size:14px;font-weight:800;cursor:pointer">غيّر المسار</div>
+      <div onClick="{{ dismissReroute }}" style="flex:1;background:rgba(14,28,34,.1);border-radius:12px;padding:12px;text-align:center;font-size:14px;font-weight:800;cursor:pointer">استمر</div>
+    </div>
+  </div>
+  </sc-if>
+  <div style="position:absolute;left:16px;right:16px;bottom:44px;background:#fff;border-radius:22px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:22px;font-weight:800;color:#15B98F">{{ navEta }}</span><span style="font-size:12px;color:#6B7A78">{{ navSub }}</span></div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#6B7A78"><span>🔊</span><span>{{ modeLabel }}</span></div>
+    <div onClick="{{ endNav }}" style="background:#F1F3F2;border-radius:999px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">إنهاء</div>
+  </div>
+</div>
+</sc-if>
+
+<!-- NEARBY -->
+<sc-if value="{{ isNearby }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#FAF8F4;display:flex;flex-direction:column;padding-top:60px">
+  <div style="padding:0 20px;display:flex;align-items:center;gap:10px">
+    <div onClick="{{ goHome }}" style="width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0">→</div>
+    <div style="flex:1;font-size:19px;font-weight:800;white-space:nowrap">{{ nearbyTitle }}</div>
+    <div style="display:flex;background:#E9ECEA;border-radius:999px;padding:3px;flex-shrink:0">
+      <div onClick="{{ viewList }}" style="padding:7px 14px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;background:{{ seg.list.bg }};color:{{ seg.list.color }}">قائمة</div>
+      <div onClick="{{ viewMap }}" style="padding:7px 14px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;background:{{ seg.map.bg }};color:{{ seg.map.color }}">خريطة</div>
+    </div>
+  </div>
+  <div style="padding:16px 20px 0;display:flex;gap:8px">
+    <sc-for list="{{ timeBtns }}" as="t" hint-placeholder-count="3">
+      <div onClick="{{ t.on }}" style="flex:1;text-align:center;border-radius:14px;padding:11px 0;font-size:14px;font-weight:700;cursor:pointer;background:{{ t.bg }};color:{{ t.color }};border:1.5px solid {{ t.border }}">{{ t.label }}</div>
+    </sc-for>
+  </div>
+  <div style="padding:12px 20px 0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none">
+    <sc-for list="{{ catBtns }}" as="c" hint-placeholder-count="5">
+      <div onClick="{{ c.on }}" style="white-space:nowrap;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;background:{{ c.bg }};color:{{ c.color }}">{{ c.label }}</div>
+    </sc-for>
+  </div>
+  <div style="padding:14px 20px 10px;display:flex;justify-content:space-between;align-items:center">
+    <div onClick="{{ openFilter }}" style="display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid #E2E5E3"><span>⚙</span><span>{{ sortLabel }}</span></div>
+    <span style="font-size:13px;color:#6B7A78;font-weight:600">{{ countText }}</span>
+  </div>
+
+  <sc-if value="{{ isListView }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:0 20px 60px;display:flex;flex-direction:column;gap:14px;scrollbar-width:none">
+    <sc-for list="{{ places }}" as="p" hint-placeholder-count="3">
+      <div onClick="{{ p.on }}" style="background:#fff;border-radius:20px;overflow:hidden;cursor:pointer;box-shadow:0 2px 10px rgba(14,28,34,.05)">
+        <div style="height:170px;background:repeating-linear-gradient(135deg,#E4E7E5 0 12px,#ECEFED 12px 24px);position:relative;display:flex;align-items:center;justify-content:center">
+          <span style="font-family:'DM Mono',monospace;font-size:11px;color:#6B7A78;direction:ltr">google place photo</span>
+          <div onClick="{{ p.fav }}" style="position:absolute;top:12px;left:12px;width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;color:{{ p.favColor }}">{{ p.favIcon }}</div>
+          <div style="position:absolute;bottom:12px;right:12px;background:#20A6D8;color:#fff;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;display:flex;gap:6px;align-items:center"><span>🚗</span><span>{{ p.eta }} دقائق</span><span style="color:#E3F3FA">· {{ p.km }} كم</span></div>
+        </div>
+        <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:800">{{ p.name }}</span><span style="font-size:13px;color:#6B7A78">{{ p.price }}</span></div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:14px"><span style="font-weight:800;color:#D97A2B">⭐ {{ p.rating }}</span><span style="color:#6B7A78">({{ p.countFmt }} تقييم)</span></div>
+          <div style="font-size:13px;color:#6B7A78">{{ p.cats }}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span style="color:#6B7A78">📍 {{ p.hood }}</span><span style="font-weight:700;color:{{ p.openColor }}">{{ p.openLabel }}</span></div>
+        </div>
+      </div>
+    </sc-for>
+    <sc-if value="{{ noPlaces }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:60px 20px;text-align:center;display:flex;flex-direction:column;gap:8px"><div style="font-size:18px;font-weight:800">ما فيه نتائج خلال {{ timeMin }} دقائق</div><div style="font-size:14px;color:#6B7A78">جرّب وقتًا أطول أو تصنيفًا آخر.</div></div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isMapView }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;position:relative;background:#EEF1EF;overflow:hidden">
+    <svg viewBox="0 0 402 560" width="100%" height="100%" style="position:absolute;inset:0" preserveAspectRatio="none">
+      <g stroke="#fff" fill="none" style="stroke-width:16;stroke-linecap:round"><path d="M-10 140 H420"></path><path d="M-10 330 H420"></path><path d="M120 -10 V570"></path><path d="M290 -10 V570"></path></g>
+      <g stroke="#DFE4E1" fill="none" style="stroke-width:5"><path d="M-10 235 H420"></path><path d="M205 -10 V570"></path></g>
+      <circle cx="201" cy="300" r="9" fill="#15B98F" stroke="#fff" style="stroke-width:3"></circle>
+    </svg>
+    <sc-for list="{{ pins }}" as="pin" hint-placeholder-count="4">
+      <div onClick="{{ pin.on }}" style="position:absolute;left:{{ pin.x }}%;top:{{ pin.y }}%;transform:translate(-50%,-100%);background:{{ pin.bg }};color:{{ pin.color }};border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;box-shadow:0 4px 14px rgba(14,28,34,.18);cursor:pointer;white-space:nowrap">⭐ {{ pin.rating }}</div>
+    </sc-for>
+    <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);background:#fff;border-radius:999px;padding:9px 16px;font-size:13px;font-weight:700;box-shadow:0 4px 14px rgba(14,28,34,.12)">البحث في هذه المنطقة</div>
+    <sc-if value="{{ hasPinCard }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ openPinPlace }}" style="position:absolute;left:16px;right:16px;bottom:54px;background:#fff;border-radius:18px;padding:12px;display:flex;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(14,28,34,.15);cursor:pointer">
+      <div style="width:70px;height:70px;border-radius:12px;background:repeating-linear-gradient(135deg,#E4E7E5 0 8px,#ECEFED 8px 16px);flex-shrink:0"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:800">{{ pinCard.name }}</span><span style="font-size:13px"><b style="color:#D97A2B">⭐ {{ pinCard.rating }}</b> <span style="color:#6B7A78">({{ pinCard.countFmt }})</span></span><span style="font-size:13px;color:#6B7A78">🚗 {{ pinCard.eta }} دقائق · {{ pinCard.km }} كم</span></div>
+      <span style="font-size:18px;color:#6B7A78">‹</span>
+    </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ filterOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeFilter }}" style="position:absolute;inset:0;background:rgba(14,28,34,.45)"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;padding:14px 20px 50px;display:flex;flex-direction:column;gap:18px">
+    <div style="width:40px;height:5px;border-radius:3px;background:#DCE1DF;margin:0 auto"></div>
+    <div style="font-size:20px;font-weight:800">فلترة</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:13px;color:#6B7A78;font-weight:600">الوقت</span>
+      <div style="display:flex;gap:8px">
+        <sc-for list="{{ timeBtns }}" as="t" hint-placeholder-count="3">
+          <div onClick="{{ t.on }}" style="flex:1;text-align:center;border-radius:14px;padding:11px 0;font-size:14px;font-weight:700;cursor:pointer;background:{{ t.bg }};color:{{ t.color }};border:1.5px solid {{ t.border }}">{{ t.label }}</div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:13px;color:#6B7A78;font-weight:600">الترتيب</span>
+      <sc-for list="{{ sortBtns }}" as="s" hint-placeholder-count="5">
+        <div onClick="{{ s.on }}" style="display:flex;justify-content:space-between;align-items:center;border-radius:14px;padding:13px 16px;font-size:15px;font-weight:700;cursor:pointer;background:{{ s.bg }};color:{{ s.color }}"><span>{{ s.label }}</span><span style="font-size:12px;font-weight:500;opacity:.8">{{ s.sub }}</span></div>
+      </sc-for>
+    </div>
+    <div onClick="{{ closeFilter }}" style="background:#15B98F;color:#0E1C22;border-radius:18px;padding:16px;text-align:center;font-size:16px;font-weight:800;cursor:pointer">عرض {{ countShort }}</div>
+  </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- PLACE DETAILS -->
+<sc-if value="{{ isPlace }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#FAF8F4;display:flex;flex-direction:column">
+  <div style="flex:1;min-height:0;overflow-y:auto;padding-bottom:120px;scrollbar-width:none">
+    <div style="height:300px;background:repeating-linear-gradient(135deg,#E4E7E5 0 14px,#ECEFED 14px 28px);position:relative;display:flex;align-items:center;justify-content:center">
+      <span style="font-family:'DM Mono',monospace;font-size:11px;color:#6B7A78;direction:ltr">google place photos · gallery</span>
+      <div onClick="{{ goNearby }}" style="position:absolute;top:60px;right:16px;width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px">→</div>
+      <div onClick="{{ sel.fav }}" style="position:absolute;top:60px;left:16px;width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:{{ sel.favColor }}">{{ sel.favIcon }}</div>
+      <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:5px"><span style="width:16px;height:5px;border-radius:3px;background:#20A6D8"></span><span style="width:5px;height:5px;border-radius:3px;background:rgba(14,28,34,.3)"></span><span style="width:5px;height:5px;border-radius:3px;background:rgba(14,28,34,.3)"></span></div>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:26px;font-weight:800">{{ sel.name }}</span><span style="font-size:14px;color:#6B7A78">{{ sel.price }}</span></div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:15px"><span style="font-weight:800;color:#D97A2B">⭐ {{ sel.rating }}</span><span style="color:#6B7A78">({{ sel.countFmt }} تقييم)</span><span style="color:#6B7A78">·</span><span style="color:#6B7A78">{{ sel.cats }}</span></div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="font-weight:700;color:{{ sel.openColor }}">{{ sel.openLabel }}</span><span style="color:#6B7A78">· يغلق 11:30 م</span></div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <div style="flex:1;background:#fff;border-radius:14px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600"><span style="font-size:18px">📞</span><span>اتصال</span></div>
+        <div style="flex:1;background:#fff;border-radius:14px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600"><span style="font-size:18px">🌐</span><span>الموقع</span></div>
+        <div style="flex:1;background:#fff;border-radius:14px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600"><span style="font-size:18px">↗</span><span>مشاركة</span></div>
+      </div>
+      <div style="background:#fff;border-radius:18px;padding:4px 16px;display:flex;flex-direction:column">
+        <div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #EDEBE6;font-size:14px"><span style="color:#6B7A78">العنوان</span><span style="font-weight:600">{{ sel.hood }}، الرياض</span></div>
+        <div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #EDEBE6;font-size:14px"><span style="color:#6B7A78">ساعات العمل</span><span style="font-weight:600">7:00 ص – 11:30 م</span></div>
+        <div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #EDEBE6;font-size:14px"><span style="color:#6B7A78">الخدمات</span><span style="font-weight:600">جلسات · استلام · واي فاي</span></div>
+        <div style="display:flex;justify-content:space-between;padding:13px 0;font-size:14px"><span style="color:#6B7A78">قائمة الطعام</span><span style="font-weight:600;color:#6B7A78">غير متاحة حاليًا</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#6B7A78"><span style="font-weight:600;color:#0E1C22">عرض في Google Maps ↗</span><span style="font-family:'DM Mono',monospace;font-size:10px;direction:ltr">Data ©Google</span></div>
+    </div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:24px 24px 0 0;padding:16px 20px 48px;display:flex;align-items:center;gap:14px;box-shadow:0 -10px 40px rgba(14,28,34,.1)">
+    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:20px;font-weight:800">🚗 {{ sel.eta }} دقائق</span><span style="font-size:12px;color:#6B7A78">{{ sel.km }} كم · بالزحمة الحالية</span></div>
+    <div onClick="{{ goNow }}" style="flex:1;background:#15B98F;color:#0E1C22;border-radius:16px;padding:16px;text-align:center;font-size:17px;font-weight:800;cursor:pointer">اذهب الآن</div>
+  </div>
+</div>
+</sc-if>
+
+<!-- FAVORITES -->
+<sc-if value="{{ isFavs }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#FAF8F4;display:flex;flex-direction:column;padding-top:60px">
+  <div style="padding:0 20px;display:flex;align-items:center;gap:10px">
+    <div onClick="{{ goHome }}" style="width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0">→</div>
+    <div style="flex:1;font-size:22px;font-weight:800">المفضلة</div>
+  </div>
+  <div style="padding:16px 20px 0;display:flex;gap:8px">
+    <sc-for list="{{ favTabs }}" as="t" hint-placeholder-count="3"><div onClick="{{ t.on }}" style="border-radius:999px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}</div></sc-for>
+  </div>
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:16px 20px 60px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none">
+    <sc-for list="{{ favList }}" as="p" hint-placeholder-count="2">
+      <div onClick="{{ p.on }}" style="background:#fff;border-radius:18px;padding:12px;display:flex;gap:12px;align-items:center;cursor:pointer">
+        <div style="width:70px;height:70px;border-radius:12px;background:repeating-linear-gradient(135deg,#E4E7E5 0 8px,#ECEFED 8px 16px);flex-shrink:0"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:800">{{ p.name }}</span><span style="font-size:13px"><b style="color:#D97A2B">⭐ {{ p.rating }}</b> <span style="color:#6B7A78">({{ p.countFmt }})</span></span><span style="font-size:13px;color:#6B7A78">🚗 {{ p.eta }} دقائق · {{ p.hood }}</span></div>
+      </div>
+    </sc-for>
+    <sc-if value="{{ noFavs }}" hint-placeholder-val="{{ false }}"><div style="padding:60px 20px;text-align:center;font-size:15px;color:#6B7A78">احفظ أماكنك المفضلة بالضغط على ♡</div></sc-if>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen: 'home', query: '', dest: 'البوليفارد', route: 'a', reroute: false, nearbyKind: 'cafes', view: 'list', time: 15, cat: 'الكل', sort: 'best', filterOpen: false, selId: null, pinId: null, favs: {}, favTab: 'الكل', fromPlace: false };
+  componentDidUpdate(_, prev) {
+    if (this.state.screen === 'nav' && prev.screen !== 'nav') {
+      clearTimeout(this._t);
+      this._t = setTimeout(() => { if (this.state.screen === 'nav') this.setState({ reroute: true }); }, 3500);
+    }
+  }
+  componentWillUnmount() { clearTimeout(this._t); }
+  renderVals() {
+    const s = this.state, G = '#15B98F', BLUE = '#20A6D8', INK = '#0E1C22', MUTE = '#6B7A78';
+    const go = screen => () => this.setState({ screen, filterOpen: false, reroute: false });
+    const fmt = n => n.toLocaleString('en-US');
+    const DATA = {
+      cafes: [
+        { id: 'c1', name: 'محمصة سدر', rating: 4.8, count: 8420, cats: ['قهوة مختصة', 'حلويات'], eta: 4, km: 1.7, hood: 'حطين', open: true, price: '﷼﷼', x: 62, y: 38 },
+        { id: 'c2', name: 'كوب الصباح', rating: 4.9, count: 4220, cats: ['قهوة مختصة', 'فطور'], eta: 3, km: 1.2, hood: 'الملقا', open: true, price: '﷼﷼', x: 40, y: 30 },
+        { id: 'c3', name: 'قهوة ١٩', rating: 5.0, count: 12, cats: ['قهوة مختصة'], eta: 6, km: 2.8, hood: 'العقيق', open: true, price: '﷼', x: 75, y: 62 },
+        { id: 'c4', name: 'مخبز الحارة', rating: 4.6, count: 11300, cats: ['مخبوزات', 'فطور'], eta: 9, km: 5.9, hood: 'النخيل', open: true, price: '﷼', x: 28, y: 70 },
+        { id: 'c5', name: 'بيت الكنافة', rating: 4.7, count: 2310, cats: ['حلويات', 'جلسات'], eta: 12, km: 7.4, hood: 'الياسمين', open: false, price: '﷼﷼', x: 55, y: 82 },
+        { id: 'c6', name: 'ركن الجلسات', rating: 4.4, count: 980, cats: ['جلسات', 'قهوة مختصة'], eta: 14, km: 9.1, hood: 'الصحافة', open: true, price: '﷼﷼﷼', x: 18, y: 48 },
+        { id: 'c7', name: 'لاتيه هاوس', rating: 4.5, count: 3400, cats: ['قهوة مختصة'], eta: 16, km: 2.1, hood: 'الربيع', open: true, price: '﷼﷼', x: 85, y: 20 },
+      ],
+      restaurants: [
+        { id: 'r1', name: 'مشويات الديرة', rating: 4.7, count: 15200, cats: ['مشويات', 'سعودي'], eta: 5, km: 2.4, hood: 'حطين', open: true, price: '﷼﷼', x: 60, y: 36 },
+        { id: 'r2', name: 'برجر ٣٦٠', rating: 4.5, count: 9800, cats: ['برجر'], eta: 4, km: 1.9, hood: 'الملقا', open: true, price: '﷼﷼', x: 38, y: 28 },
+        { id: 'r3', name: 'شاورما الخال', rating: 4.8, count: 21000, cats: ['شاورما'], eta: 8, km: 4.6, hood: 'العقيق', open: true, price: '﷼', x: 72, y: 60 },
+        { id: 'r4', name: 'نابولي', rating: 4.6, count: 3200, cats: ['بيتزا', 'إيطالي'], eta: 10, km: 6.2, hood: 'النخيل', open: false, price: '﷼﷼﷼', x: 30, y: 68 },
+        { id: 'r5', name: 'بحر الشرقية', rating: 4.9, count: 640, cats: ['بحري'], eta: 13, km: 8.8, hood: 'الياسمين', open: true, price: '﷼﷼﷼', x: 52, y: 84 },
+        { id: 'r6', name: 'مطبخ هند', rating: 4.3, count: 5100, cats: ['هندي', 'آسيوي'], eta: 15, km: 9.9, hood: 'الصحافة', open: true, price: '﷼﷼', x: 20, y: 50 },
+      ],
+    };
+    const all = DATA[s.nearbyKind];
+    const CATS = s.nearbyKind === 'cafes' ? ['الكل', 'قهوة مختصة', 'فطور', 'حلويات', 'مخبوزات', 'جلسات'] : ['الكل', 'برجر', 'سعودي', 'مشويات', 'شاورما', 'بيتزا', 'إيطالي', 'آسيوي', 'هندي', 'بحري'];
+    const C = all.reduce((a, p) => a + p.rating, 0) / all.length, m = 500;
+    const bayes = p => (p.count / (p.count + m)) * p.rating + (m / (p.count + m)) * C;
+    const SORTS = {
+      best: { label: '🏆 الأفضل حولي', sub: 'تقييم موزون', fn: (a, b) => bayes(b) - bayes(a) },
+      rating: { label: '⭐ الأعلى تقييمًا', sub: 'Rating', fn: (a, b) => b.rating - a.rating },
+      count: { label: '🔥 الأكثر تقييمًا', sub: 'عدد المقيّمين', fn: (a, b) => b.count - a.count },
+      eta: { label: '⚡ الأسرع وصولًا', sub: 'وقت القيادة', fn: (a, b) => a.eta - b.eta },
+      dist: { label: '📍 الأقرب', sub: 'المسافة', fn: (a, b) => a.km - b.km },
+    };
+    const filtered = all.filter(p => p.eta <= s.time && (s.cat === 'الكل' || p.cats.includes(s.cat))).sort(SORTS[s.sort].fn);
+    const deco = p => ({ ...p, countFmt: fmt(p.count), cats: p.cats.join(' • '), openLabel: p.open ? '🟢 مفتوح الآن' : '🔴 مغلق', openColor: p.open ? '#0E8F6E' : '#D97A2B',
+      favIcon: s.favs[p.id] ? '♥' : '♡', favColor: s.favs[p.id] ? '#C0392B' : INK,
+      on: () => this.setState({ screen: 'place', selId: p.id }),
+      fav: e => { e.stopPropagation(); this.setState({ favs: { ...s.favs, [p.id]: !s.favs[p.id] } }); } });
+    const places = filtered.map(deco);
+    const selRaw = [...DATA.cafes, ...DATA.restaurants].find(p => p.id === s.selId) || all[0];
+    const sel = deco(selRaw);
+    const pinRaw = filtered.find(p => p.id === s.pinId);
+    const pinCard = pinRaw ? deco(pinRaw) : null;
+    const unit = s.nearbyKind === 'cafes' ? 'مقهى' : 'مطعم';
+    const pill = (on, dark) => dark ? { bg: BLUE, color: '#fff', border: BLUE } : { bg: on ? BLUE : '#fff', color: on ? '#fff' : INK, border: on ? BLUE : '#E2E5E3' };
+    const timeBtns = [5, 10, 15].map(t => ({ label: `≤ ${t} دقائق`, ...pill(s.time === t), on: () => this.setState({ time: t }) }));
+    const catBtns = CATS.map(c => ({ label: c, bg: s.cat === c ? '#F2994A' : '#fff', color: s.cat === c ? '#fff' : INK, on: () => this.setState({ cat: c }) }));
+    const sortBtns = Object.keys(SORTS).map(k => ({ label: SORTS[k].label, sub: SORTS[k].sub, bg: s.sort === k ? BLUE : '#F1F3F2', color: s.sort === k ? '#fff' : INK, on: () => this.setState({ sort: k }) }));
+    const pins = filtered.map(p => ({ x: p.x, y: p.y, rating: p.rating, bg: s.pinId === p.id ? BLUE : '#fff', color: s.pinId === p.id ? '#fff' : INK, on: () => this.setState({ pinId: p.id }) }));
+    // routes
+    const base = s.fromPlace ? selRaw.eta : 29, baseKm = s.fromPlace ? selRaw.km : 24;
+    const R = {
+      a: { emoji: '🟢', label: 'بدون توقف', color: G, tint: '#E3F7F1', min: base + 7, km: (baseKm * 1.33).toFixed(1), traffic: 'زحمة شبه معدومة', hoods: 'النخيل ← العقيق ← حطين' },
+      b: { emoji: '⚡', label: 'أسرع طريق', color: BLUE, tint: '#E3F3FA', min: base, km: baseKm.toFixed(1), traffic: 'زحمة متوسطة', hoods: 'الملقا ← حطين' },
+      c: { emoji: '📏', label: 'أقصر طريق', color: MUTE, tint: '#F1F3F2', min: base + 5, km: (baseKm * 0.8).toFixed(1), traffic: 'زحمة مرتفعة', hoods: 'طريق الملك فهد' },
+    };
+    const routeCards = ['a', 'b', 'c'].map(k => ({ ...R[k], border: s.route === k ? R[k].color : '#E2E5E3', bg: s.route === k ? R[k].tint : '#fff', on: () => this.setState({ route: k }) }));
+    const rt = {}; ['a', 'b', 'c'].forEach(k => { rt[k] = { stroke: s.route === k ? R[k].color : '#C7CECB', sw: s.route === k ? 12 : 7, op: s.route === k ? 1 : 0.8 }; });
+    const cur = R[s.route];
+    // search
+    const places2 = s.query ? [{ icon: '◎', name: 'البوليفارد', sub: 'بوليفارد رياض سيتي، حطين', dist: '24 km', d: 'البوليفارد' }, { icon: '◎', name: 'بوليفارد وورلد', sub: 'طريق الأمير محمد بن سلمان', dist: '27 km', d: 'بوليفارد وورلد' }, { icon: '◎', name: 'البوابة الاقتصادية', sub: 'طريق الملك خالد', dist: '19 km', d: 'البوابة الاقتصادية' }]
+      : [{ icon: '↺', name: 'البوليفارد', sub: 'حطين · أمس', dist: '24 km', d: 'البوليفارد' }, { icon: '↺', name: 'مطار الملك خالد', sub: 'منذ 3 أيام', dist: '38 km', d: 'مطار الملك خالد' }, { icon: '♥', name: 'محمصة سدر', sub: 'المفضلة', dist: '1.7 km', d: 'محمصة سدر' }];
+    const results = places2.map(r => ({ ...r, on: () => this.setState({ screen: 'routes', dest: r.d, fromPlace: false, route: 'a', query: '' }) }));
+    const KEYS = 'ضصثقفغعهخحجدشسيبلاتنمكطئءؤرلاىةوزظ'.split('');
+    const keys = KEYS.slice(0, 30).map(ch => ({ ch, span: 1, on: () => this.setState({ query: s.query + ch }) }));
+    const favAll = [...DATA.cafes, ...DATA.restaurants].filter(p => s.favs[p.id]);
+    const favList = favAll.filter(p => s.favTab === 'الكل' || (s.favTab === 'مطاعم' ? p.id[0] === 'r' : p.id[0] === 'c')).map(deco);
+    const favTabs = ['الكل', 'مطاعم', 'مقاهي'].map(t => ({ label: t, bg: s.favTab === t ? BLUE : '#fff', color: s.favTab === t ? '#fff' : INK, on: () => this.setState({ favTab: t }) }));
+    const navBtns = [['home', 'الرئيسية'], ['search', 'البحث'], ['routes', 'الطرق'], ['nav', 'الملاحة'], ['nearby', 'مقاهيي'], ['place', 'التفاصيل'], ['favs', 'المفضلة']].map(([k, label]) => ({ label, on: () => this.setState({ screen: k, nearbyKind: k === 'nearby' ? 'cafes' : s.nearbyKind, filterOpen: false, reroute: false }), ...pill(s.screen === k) }));
+    return {
+      isHome: s.screen === 'home', isSearch: s.screen === 'search', isRoutes: s.screen === 'routes', isNav: s.screen === 'nav', isNearby: s.screen === 'nearby', isPlace: s.screen === 'place', isFavs: s.screen === 'favs',
+      goHome: go('home'), goSearch: go('search'), goFavs: go('favs'), goNearby: go('nearby'),
+      goCafes: () => this.setState({ screen: 'nearby', nearbyKind: 'cafes', cat: 'الكل', view: 'list', pinId: null }),
+      goRestaurants: () => this.setState({ screen: 'nearby', nearbyKind: 'restaurants', cat: 'الكل', view: 'list', pinId: null }),
+      query: s.query || 'ابحث عن مكان أو عنوان', resultsTitle: s.query ? 'نتائج' : 'الأخيرة', results, keys,
+      pickHome: () => this.setState({ screen: 'routes', dest: 'المنزل · حي النرجس', fromPlace: false, route: 'a' }),
+      pickWork: () => this.setState({ screen: 'routes', dest: 'العمل · طريق الملك فهد', fromPlace: false, route: 'a' }),
+      dest: s.fromPlace ? selRaw.name : s.dest, routeCards, rt,
+      startNav: () => this.setState({ screen: 'nav', reroute: false }),
+      navDist: '200 م', navEta: `${cur.min} دقيقة`, navSub: `${cur.km} كم · الوصول ${cur.min > 30 ? '10:08' : '9:53'} م`, modeLabel: cur.label,
+      reroute: s.reroute, acceptReroute: () => this.setState({ reroute: false, route: 'a' }), dismissReroute: () => this.setState({ reroute: false }),
+      endNav: go('home'),
+      nearbyTitle: s.nearbyKind === 'cafes' ? 'مقاهٍ قريبة منك' : 'مطاعم قريبة منك',
+      seg: { list: { bg: s.view === 'list' ? BLUE : 'transparent', color: s.view === 'list' ? '#fff' : INK }, map: { bg: s.view === 'map' ? BLUE : 'transparent', color: s.view === 'map' ? '#fff' : INK } },
+      viewList: () => this.setState({ view: 'list' }), viewMap: () => this.setState({ view: 'map' }),
+      isListView: s.view === 'list', isMapView: s.view === 'map',
+      timeBtns, catBtns, sortBtns, sortLabel: SORTS[s.sort].label, timeMin: s.time,
+      countText: `${filtered.length} ${unit} خلال ${s.time} دقيقة`, countShort: `${filtered.length} ${unit}`,
+      places, noPlaces: filtered.length === 0, pins, hasPinCard: !!pinCard, pinCard: pinCard || {}, openPinPlace: () => this.setState({ screen: 'place', selId: s.pinId }),
+      filterOpen: s.filterOpen, openFilter: () => this.setState({ filterOpen: true }), closeFilter: () => this.setState({ filterOpen: false }),
+      sel, goNow: () => this.setState({ screen: 'routes', fromPlace: true, route: 'a' }),
+      favTabs, favList, noFavs: favList.length === 0, navBtns,
+    };
+  }
+}
+</script>
+</body>
+</html>

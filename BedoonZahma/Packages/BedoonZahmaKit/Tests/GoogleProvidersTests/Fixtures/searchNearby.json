@@ -1,0 +1,32 @@
+{
+  "places": [
+    {
+      "id": "ChIJ_A",
+      "displayName": { "text": "محمصة سدر", "languageCode": "ar" },
+      "location": { "latitude": 24.7705, "longitude": 46.621 },
+      "types": ["coffee_roastery", "cafe", "food", "point_of_interest"],
+      "primaryType": "coffee_roastery",
+      "rating": 4.8,
+      "userRatingCount": 8420,
+      "photos": [ { "name": "places/ChIJ_A/photos/P1", "widthPx": 4032, "heightPx": 3024, "authorAttributions": [ { "displayName": "Salem", "uri": "https://maps.google.com/maps/contrib/1", "photoUri": "https://lh3.googleusercontent.com/a" } ] } ],
+      "currentOpeningHours": { "openNow": true },
+      "businessStatus": "OPERATIONAL",
+      "priceLevel": "PRICE_LEVEL_MODERATE",
+      "shortFormattedAddress": "حطين، الرياض",
+      "addressComponents": [ { "longText": "حطين", "shortText": "حطين", "types": ["sublocality_level_1", "sublocality", "political"] }, { "longText": "الرياض", "shortText": "الرياض", "types": ["locality", "political"] } ],
+      "servesBreakfast": true,
+      "outdoorSeating": true
+    },
+    {
+      "id": "ChIJ_B",
+      "displayName": { "text": "مقهى بلا بيانات", "languageCode": "ar" },
+      "location": { "latitude": 24.78, "longitude": 46.63 },
+      "types": ["cafe"],
+      "primaryType": "cafe"
+    }
+  ],
+  "routingSummaries": [
+    { "legs": [ { "duration": "251s", "distanceMeters": 1712 } ], "directionsUri": "https://www.google.com/maps/dir/..." },
+    {}
+  ]
+}
