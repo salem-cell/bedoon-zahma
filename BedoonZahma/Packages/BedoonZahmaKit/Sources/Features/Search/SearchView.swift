@@ -59,7 +59,8 @@ final class SearchViewModel {
         let token = sessionToken
         sessionToken = UUID().uuidString
         // TomTom يعطي الإحداثية مع الاقتراح؛ Google يحتاج Place Details (Essentials).
-        let coord = s.coordinate ?? (try? await env.places.placeDetails(placeID: s.placeID, level: .basic, languageCode: env.languageCode, sessionToken: token).coordinate)
+        var coord = s.coordinate
+        if coord == nil { coord = try? await env.places.placeDetails(placeID: s.placeID, level: .basic, languageCode: env.languageCode, sessionToken: token).coordinate }
         return .place(placeID: s.placeID, name: s.mainText, coordinate: coord)
     }
 
