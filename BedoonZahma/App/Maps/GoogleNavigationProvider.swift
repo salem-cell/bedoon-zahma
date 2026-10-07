@@ -84,7 +84,7 @@ final class GoogleNavigationProvider: NSObject, NavigationProvider, GMSNavigator
                 // الطريق الذي اختاره TrafficRouteScorer يُعاد بناؤه داخل SDK من الرمز، وإعادة التوجيه تحافظ على أهدافه.
                 navigator.setDestinations([waypoint], routeToken: token) { c.resume(returning: $0) }
             } else {
-                let options = GMSNavigationRoutingOptions()
+                let options = GMSNavigationMutableRoutingOptions()
                 options.routingStrategy = strategy == .shortest ? .shorter : .defaultBest
                 options.alternateRoutesStrategy = .none
                 navigator.setDestinations([waypoint], routingOptions: options) { c.resume(returning: $0) }

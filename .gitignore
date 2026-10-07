@@ -25,3 +25,6 @@ Thumbs.db
 # أدوات محلية
 .claude/
 *.log
+
+# أثر بناء SwiftPM على Windows
+BedoonZahma/Packages/BedoonZahmaKit/Info.plist
