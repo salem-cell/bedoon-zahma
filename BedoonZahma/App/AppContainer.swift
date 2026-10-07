@@ -20,7 +20,14 @@ enum AppConfig {
     }
 
     static var googleMapsIOSKey: String? { string("GoogleMapsIOSKey") }
-    static var backendURL: URL? { string("BZBackendURL").flatMap(URL.init(string:)) }
+    /// يتحقق أن الرابط يحمل مضيفًا فعليًا (حماية من خطأ xcconfig حيث يقطع "//" القيمة إلى "https:" فقط).
+    static var backendURL: URL? {
+        guard let raw = string("BZBackendURL"), let url = URL(string: raw), let host = url.host, !host.isEmpty else {
+            NSLog("[Mishwarak] BZBackendURL غير صالح: %@", string("BZBackendURL") ?? "nil")
+            return nil
+        }
+        return url
+    }
     static var appKey: String { string("BZAppKey") ?? "" }
     static var appVersion: String { (string("CFBundleShortVersionString") ?? "0") + "+" + (string("CFBundleVersion") ?? "0") }
     /// مزوّد البيانات: "tomtom" (مجاني؛ خريطة Apple MapKit وإرشاد ذاتي) أو "google" (Maps/Navigation SDK).
