@@ -57,7 +57,11 @@ enum AppContainer {
             // بلا خادم لا يمكن تشغيل الإنتاج — نُفشل مبكرًا بدل عرض بيانات وهمية.
             fatalError("BZ_BACKEND_URL مفقود. راجع Config/*.xcconfig")
         }
-        let navigation = GoogleNavigationProvider()
+        // بلا مفتاح Maps SDK (مثل بناء TestFlight قبل تفعيل Google Cloud) لا نُهيّئ Google Maps كي لا ينهار التطبيق؛
+        // تُعرض خريطة محايدة وتفشل الملاحة بخطأ واضح، وتبقى بيانات الأماكن والطرق حقيقية عبر الخادم.
+        let hasMapsKey = !(AppConfig.googleMapsIOSKey ?? "").isEmpty
+        let navigation: NavigationProvider = hasMapsKey ? GoogleNavigationProvider() : UnavailableNavigationProvider()
+        let maps: MapSurfaces = hasMapsKey ? GoogleMapSurfaces(navigation: navigation as! GoogleNavigationProvider) : PlaceholderMapSurfaces()
         return AppEnvironment(
             places: GooglePlacesProvider(api: backend),
             routing: GoogleRoutingProvider(api: backend),
@@ -66,7 +70,7 @@ enum AppContainer {
             analytics: analytics,
             remoteConfig: remoteConfig,
             favorites: FavoritesStore(), recents: RecentSearchesStore(), savedAddresses: SavedAddressesStore(), settings: SettingsStore(),
-            maps: GoogleMapSurfaces(navigation: navigation),
+            maps: maps,
             navigation: navigation,
             isDevMock: false
         )

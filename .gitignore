@@ -28,3 +28,6 @@ Thumbs.db
 
 # أثر بناء SwiftPM على Windows
 BedoonZahma/Packages/BedoonZahmaKit/Info.plist
+
+# Vercel
+backend/.vercel/

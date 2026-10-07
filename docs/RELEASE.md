@@ -1,6 +1,21 @@
 # النشر إلى TestFlight وApp Store بلا جهاز Mac
 
-كل شيء يعمل على Mac سحابي في GitHub Actions (`.github/workflows/release.yml`). تحتاج مرة واحدة إلى:
+كل شيء يعمل على Mac سحابي في GitHub Actions (`.github/workflows/release.yml`).
+
+## الحالة الحالية (2026‑10‑07)
+
+| البند | الحالة |
+|---|---|
+| مفتاح App Store Connect API (`ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_P8_BASE64`) وفريق Apple (`APPLE_TEAM_ID`) | ✅ موجودة كأسرار في المستودع |
+| معرّف الحزمة `sa.bedoonzahma.app` في حساب المطوّر | ✅ مسجَّل (ID: D7AUK9TVWF) |
+| الخادم الخلفي | ✅ منشور على Vercel: `https://bedoon-zahma-backend.vercel.app` (`BZ_BACKEND_URL`, `BZ_APP_KEY` مضبوطان) |
+| **سجل التطبيق في App Store Connect** | ❌ يدويًا — App Store Connect → Apps → + → New App: المنصة iOS، الاسم «بدون زحمة»، اللغة الأساسية العربية، Bundle ID: `sa.bedoonzahma.app`، SKU مثل `BEDOONZAHMA-IOS-001` |
+| **مفتاح Google Maps Platform لـ iOS** (`GOOGLE_MAPS_IOS_KEY`) | ❌ من Google Cloud Console: فعّل Maps SDK for iOS وNavigation SDK وأنشئ مفتاحًا مقيّدًا بـ iOS/Bundle ID. بدونه يعمل التطبيق بخريطة محايدة وتُعطَّل الملاحة مع رسالة واضحة |
+| **مفتاح Google الخادمي** (`GOOGLE_SERVER_API_KEY` على Vercel) | ❌ فعّل Routes API وPlaces API (New)، أنشئ مفتاحًا مقيّدًا بالـ APIs، ثم: `vercel env rm GOOGLE_SERVER_API_KEY production && printf 'AIza…' \| vercel env add GOOGLE_SERVER_API_KEY production && vercel deploy --prod` من مجلد `backend/` |
+
+بعد إكمال البنود الثلاثة الناقصة، شغّل **Actions → Release to TestFlight → Run workflow**.
+
+تحتاج مرة واحدة إلى:
 
 ## 1) حساب Apple Developer ومفتاح App Store Connect API
 1. من [App Store Connect](https://appstoreconnect.apple.com) → **Users and Access → Integrations → App Store Connect API** → أنشئ مفتاحًا بدور **App Manager** (أو Admin).

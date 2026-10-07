@@ -2,4 +2,4 @@
 #include? "Secrets.xcconfig"
 
 BZ_USE_MOCKS = 0
-BZ_BACKEND_URL = https://api.bedoonzahma.sa
+BZ_BACKEND_URL = https://bedoon-zahma-backend.vercel.app

@@ -188,6 +188,19 @@ struct NavigationMapRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: GMSMapView, context: Context) {}
 }
 
+/// يُستخدم عندما لا يتوفر مفتاح Maps/Navigation SDK: لا يحاكي شيئًا، بل يفشل بخطأ واضح يعرضه الواجهة.
+@MainActor
+final class UnavailableNavigationProvider: NavigationProvider {
+    private(set) var state: NavigationState = .idle
+    var stateStream: AsyncStream<NavigationState> { AsyncStream { c in c.yield(.failed("navigation_sdk_unconfigured")); c.finish() } }
+    func start(route: RouteModel, destination: Destination, strategy: RouteStrategy) async throws {
+        state = .failed("navigation_sdk_unconfigured")
+        throw AppError.providerFailure(status: nil, message: "Navigation SDK غير مفعّل (GOOGLE_MAPS_IOS_KEY مفقود)")
+    }
+    func stop() { state = .idle }
+    func setVoiceGuidance(enabled: Bool) {}
+}
+
 /// بديل تطويري (DevMocks): يحاكي تقدّم الرحلة بلا SDK.
 @MainActor
 final class SimulatedNavigationProvider: NavigationProvider {

@@ -9,7 +9,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         if let key = AppConfig.googleMapsIOSKey, !key.isEmpty {
             GMSServices.provideAPIKey(key)
         } else if !AppConfig.useMocks {
-            assertionFailure("GOOGLE_MAPS_IOS_KEY مفقود — راجع Config/Secrets.xcconfig")
+            // لا نهيّئ SDK بلا مفتاح؛ AppContainer يتحوّل إلى خريطة محايدة وملاحة معطّلة بخطأ واضح.
+            NSLog("[BedoonZahma] GOOGLE_MAPS_IOS_KEY مفقود — الخرائط والملاحة معطّلة في هذا البناء")
         }
         return true
     }
