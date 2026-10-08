@@ -55,26 +55,30 @@ public struct TomTomPlacesProvider: PlacesProvider {
     private let api: BackendAPI
     public init(api: BackendAPI) { self.api = api }
 
-    /// رموز TomTom العليا: 7315 مطاعم، 9376 مقاهٍ. التصنيف الدقيق يُشتق من أسماء التصنيفات في النتيجة.
+    /// رموز TomTom العليا: 7315 مطاعم، 9376 مقاهٍ. القسم يُحدَّد بهويته (وجود cafe/coffee_shop = مقاهٍ) لا بكل أنواعه،
+    /// لأن قائمة المقاهي تحوي أنواعًا مثل breakfast_restaurant لا يجوز أن تجلب المطاعم.
     static func categorySet(for includedTypes: [String]) -> [Int] {
-        let cafeLike: Set<String> = ["cafe", "coffee_shop", "coffee_roastery", "coffee_stand", "tea_house", "bakery", "pastry_shop", "cake_shop", "dessert_shop", "dessert_restaurant", "ice_cream_shop", "juice_shop"]
-        let wantsCafes = includedTypes.contains { cafeLike.contains($0) }
-        let wantsRestaurants = includedTypes.contains { $0.hasSuffix("restaurant") || $0 == "steak_house" }
-        var set: [Int] = []
-        if wantsCafes { set.append(9376) }
-        if wantsRestaurants || set.isEmpty { set.append(7315) }
-        return set
+        let cafeIdentity: Set<String> = ["cafe", "coffee_shop", "coffee_roastery", "coffee_stand", "tea_house"]
+        return includedTypes.contains { cafeIdentity.contains($0) } ? [9376] : [7315]
+    }
+
+    /// يُبقي النتائج التي فئتها الأساسية (أول عنصر في categorySet، مثل 9376002) تنتمي للفئة العليا المطلوبة.
+    static func belongs(_ result: TTSearchResult, to topLevel: [Int]) -> Bool {
+        guard let first = result.poi?.categorySet?.first?.id else { return true }
+        let prefix = Int(String(first).prefix(4)) ?? first
+        return topLevel.contains(prefix)
     }
 
     public func searchNearby(_ r: NearbySearchRequest) async throws -> [NearbyPlace] {
+        let cats = Self.categorySet(for: r.includedTypes)
         let res = try await api.ttNearby(TTNearbyRequest(
             center: TTPoint(latitude: r.center.latitude, longitude: r.center.longitude),
             radiusMeters: r.radiusMeters,
-            categorySet: Self.categorySet(for: r.includedTypes),
+            categorySet: cats,
             limit: 100,
             languageCode: r.languageCode.hasPrefix("ar") ? "ar" : "en-GB"
         ))
-        return (res.results ?? []).compactMap { TomTomMappers.place($0) }
+        return (res.results ?? []).filter { Self.belongs($0, to: cats) }.compactMap { TomTomMappers.place($0) }
     }
 
     public func autocomplete(_ r: AutocompleteRequest) async throws -> [SearchSuggestion] {

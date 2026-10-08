@@ -100,9 +100,18 @@ final class TomTomProvidersTests: XCTestCase {
         XCTAssertEqual(s.distanceMeters, 1_712)
     }
 
-    func testCategorySetSelection() {
-        XCTAssertEqual(TomTomPlacesProvider.categorySet(for: ["cafe", "coffee_shop", "bakery"]), [9376])
-        XCTAssertEqual(TomTomPlacesProvider.categorySet(for: ["restaurant", "pizza_restaurant"]), [7315])
-        XCTAssertEqual(TomTomPlacesProvider.categorySet(for: ["cafe", "restaurant"]), [9376, 7315])
+    func testCategorySetSelectionKeepsCafesAndRestaurantsSeparate() {
+        XCTAssertEqual(TomTomPlacesProvider.categorySet(for: ["cafe", "coffee_shop", "bakery", "breakfast_restaurant", "dessert_restaurant"]), [9376], "قسم المقاهي لا يجلب المطاعم رغم وجود أنواع *_restaurant في قائمته")
+        XCTAssertEqual(TomTomPlacesProvider.categorySet(for: ["restaurant", "pizza_restaurant", "dessert_restaurant"]), [7315])
+    }
+
+    func testNearbyResultsAreFilteredByPrimaryTopLevelCategory() throws {
+        let res = try JSONDecoder().decode(TTSearchResponse.self, from: fixture("ttNearby"))
+        let results = res.results ?? []
+        XCTAssertTrue(TomTomPlacesProvider.belongs(results[0], to: [9376]), "9376002 → مقهى")
+        XCTAssertFalse(TomTomPlacesProvider.belongs(results[0], to: [7315]))
+        XCTAssertTrue(TomTomPlacesProvider.belongs(results[1], to: [7315]), "7315 → مطعم")
+        XCTAssertFalse(TomTomPlacesProvider.belongs(results[1], to: [9376]))
+        XCTAssertEqual(results.filter { TomTomPlacesProvider.belongs($0, to: [9376]) }.count, 1)
     }
 }
