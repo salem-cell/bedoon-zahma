@@ -16,7 +16,9 @@ public struct TomTomRoutingProvider: RoutingProvider {
             origin: TTPoint(latitude: request.origin.latitude, longitude: request.origin.longitude),
             destination: TTPoint(latitude: dest.latitude, longitude: dest.longitude),
             languageCode: request.languageCode.hasPrefix("ar") ? "ar" : "en-GB",
-            avoidTolls: request.avoidTolls
+            avoidTolls: request.avoidTolls,
+            maxAlternatives: 3,
+            vehicleHeading: request.headingDegrees
         )
         let bundle = try await api.ttRoutes(body)
         let routes = TomTomMappers.routes(bundle)
@@ -29,7 +31,8 @@ public struct TomTomRoutingProvider: RoutingProvider {
 public struct TomTomTravelTimeProvider: TravelTimeProvider {
     private let api: BackendAPI
     public init(api: BackendAPI) { self.api = api }
-    public var maxElementsPerRequest: Int { 25 }
+    /// الخادم يحسب كل وجهة بطلب توجيه ملخّص بتزامن 4 (حد TomTom 5 طلبات/ثانية) → 10 وجهات ≈ 3 ثوانٍ.
+    public var maxElementsPerRequest: Int { 10 }
 
     public func travelTimes(from origin: Coordinate, to destinations: [Coordinate], trafficAware: Bool) async throws -> [TravelTimeResult] {
         guard !destinations.isEmpty else { return [] }

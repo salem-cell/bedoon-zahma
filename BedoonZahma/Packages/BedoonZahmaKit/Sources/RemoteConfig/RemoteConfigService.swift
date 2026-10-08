@@ -16,9 +16,9 @@ public struct FeatureFlags: Codable, Hashable, Sendable {
 /// نسخة Codable من معاملات Nearby (تُحوَّل إلى NearbySearchConfig في Features لتجنّب دورة اعتماد).
 public struct NearbyConfigValues: Codable, Hashable, Sendable {
     public var prefilterRadiusMeters: [String: Double] = ["5": 5_000, "10": 9_000, "15": 14_000]
-    public var maxFanOutRequests: Int = 4
+    public var maxFanOutRequests: Int = 2
     public var typesPerRequest: Int = 8
-    public var maxCandidates: Int = 80
+    public var maxCandidates: Int = 30
     public var cacheTTLSeconds: Int = 120
     public var preferRoutingSummaries: Bool = true
     public init() {}

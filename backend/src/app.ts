@@ -13,7 +13,10 @@ export function buildApp(cfg: Config, deps?: { google?: GoogleClient; tomtom?: T
   const metrics = deps?.metrics ?? new Metrics(cfg.skuPrices);
   const google = deps?.google ?? new GoogleClient(cfg, metrics);
   const tomtom = deps?.tomtom ?? new TomTomClient(cfg, metrics);
-  const remote = buildRemoteConfig(cfg.CONFIG_OVERRIDES_PATH, { mapsProvider: cfg.MAPS_PROVIDER });
+  // مع TomTom يعيد البحث القريب 100 نتيجة في طلب واحد، فلا حاجة لتوزيع الطلبات (fan-out) ولا لإهدار حصة البحث.
+  const remote = buildRemoteConfig(cfg.CONFIG_OVERRIDES_PATH, cfg.MAPS_PROVIDER === "tomtom"
+    ? { mapsProvider: "tomtom", nearby: { ...buildRemoteConfig().config.nearby, maxFanOutRequests: 1, maxCandidates: 30 } }
+    : { mapsProvider: cfg.MAPS_PROVIDER });
 
   app.register(rateLimit, {
     max: cfg.RATE_LIMIT_PER_MIN,

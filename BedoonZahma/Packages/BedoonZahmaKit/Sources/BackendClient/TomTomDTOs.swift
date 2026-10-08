@@ -75,8 +75,9 @@ public struct TTRoutesRequest: Codable, Hashable, Sendable {
     public var languageCode: String
     public var avoidTolls: Bool
     public var maxAlternatives: Int
-    public init(origin: TTPoint, destination: TTPoint, languageCode: String, avoidTolls: Bool, maxAlternatives: Int = 3) {
-        self.origin = origin; self.destination = destination; self.languageCode = languageCode; self.avoidTolls = avoidTolls; self.maxAlternatives = maxAlternatives
+    public var vehicleHeading: Int?
+    public init(origin: TTPoint, destination: TTPoint, languageCode: String, avoidTolls: Bool, maxAlternatives: Int = 3, vehicleHeading: Int? = nil) {
+        self.origin = origin; self.destination = destination; self.languageCode = languageCode; self.avoidTolls = avoidTolls; self.maxAlternatives = maxAlternatives; self.vehicleHeading = vehicleHeading
     }
 }
 

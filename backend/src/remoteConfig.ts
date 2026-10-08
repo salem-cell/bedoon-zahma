@@ -39,7 +39,7 @@ export const DEFAULT_CONFIG = {
     prefilterRadiusMeters: { "5": 5000, "10": 9000, "15": 14000 },
     maxFanOutRequests: 4,
     typesPerRequest: 8,
-    maxCandidates: 80,
+    maxCandidates: 30,
     cacheTTLSeconds: 120,
     preferRoutingSummaries: true,
   },

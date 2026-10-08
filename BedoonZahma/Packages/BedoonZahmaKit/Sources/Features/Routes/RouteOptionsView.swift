@@ -46,6 +46,7 @@ struct RouteOptionsView: View {
     @Environment(\.appEnv) private var env
     @Environment(AppRouter.self) private var router
     @Environment(TripState.self) private var trip
+    @Environment(\.openURL) private var openURL
     @State private var vm = RouteOptionsViewModel()
 
     var body: some View {
@@ -75,23 +76,58 @@ struct RouteOptionsView: View {
                     } else if let e = vm.error {
                         ErrorStateView(title: e.userTitle, message: e.userMessage, retryTitle: L("common.retry")) { vm.retry(trip: trip) }
                     } else if let options = trip.options {
-                        ForEach(RouteStrategy.allCases) { s in
-                            if let r = options.route(for: s) {
-                                RouteCard(strategy: s, route: r, selected: trip.strategy == s) { select(s, options: options) }
-                                    .accessibilityIdentifier("route.\(s.rawValue)")
+                        // عندما يختار المحرك الطريق نفسه لأكثر من استراتيجية (رحلة قصيرة أو بلا بدائل)، نعرض بطاقة واحدة تحمل الشارات معًا.
+                        ForEach(groupedCards(options), id: \.route.id) { card in
+                            RouteCard(strategy: card.strategies[0], route: card.route, selected: card.strategies.contains(trip.strategy), extraStrategies: Array(card.strategies.dropFirst())) {
+                                select(card.strategies.contains(trip.strategy) ? trip.strategy : card.strategies[0], options: options)
                             }
+                            .accessibilityIdentifier("route.\(card.strategies[0].rawValue)")
                         }
                         if let r = trip.selectedRoute, !r.hasTrafficData {
                             Text(L("routes.notraffic")).font(BZFont.small).foregroundStyle(BZColor.mute)
                         }
                         PrimaryButton(L("routes.start")) { start() }.padding(.top, 4)
                             .accessibilityIdentifier("routes.start")
+                        if let dest = trip.destination?.coordinate {
+                            // ربط مجاني رسمي مع Google: تسليم الملاحة إلى تطبيق خرائط Google بالوجهة المختارة.
+                            Button {
+                                openURL(GoogleMapsURLs.directions(to: dest, from: trip.origin, avoidTolls: false))
+                            } label: {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "arrow.triangle.turn.up.right.diamond")
+                                    Text(L("routes.googlemaps"))
+                                }
+                                .font(BZFont.caption.weight(.bold))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(BZColor.chipBg, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                .foregroundStyle(BZColor.ink)
+                            }
+                            .buttonStyle(PressableStyle())
+                            .accessibilityIdentifier("routes.googlemaps")
+                        }
                     }
                 }
             }
         }
         .bzHideNavBar()
         .onAppear { if let env { vm.load(env: env, trip: trip) } }
+    }
+
+    struct RouteCardGroup { var strategies: [RouteStrategy]; var route: RouteModel }
+
+    /// يجمع الاستراتيجيات التي تشير إلى المسار نفسه (نفس المعرّف أو نفس الخط) في بطاقة واحدة.
+    private func groupedCards(_ options: RouteOptions) -> [RouteCardGroup] {
+        var groups: [RouteCardGroup] = []
+        for s in RouteStrategy.allCases {
+            guard let r = options.route(for: s) else { continue }
+            if let i = groups.firstIndex(where: { $0.route.id == r.id || $0.route.encodedPolyline == r.encodedPolyline }) {
+                groups[i].strategies.append(s)
+            } else {
+                groups.append(RouteCardGroup(strategies: [s], route: r))
+            }
+        }
+        return groups
     }
 
     private var overlays: [MapRouteOverlay] {
@@ -121,6 +157,7 @@ struct RouteCard: View {
     var strategy: RouteStrategy
     var route: RouteModel
     var selected: Bool
+    var extraStrategies: [RouteStrategy] = []
     var action: () -> Void
 
     private var color: Color { strategy == .noStop ? BZColor.green : (strategy == .fastest ? BZColor.sky : BZColor.mute) }
@@ -132,8 +169,8 @@ struct RouteCard: View {
                 RoundedRectangle(cornerRadius: 6).fill(color).frame(width: 12, height: 40)
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 8) {
-                        Text(strategy.emoji)
-                        Text(strategy.title).font(BZFont.font(17, weight: .heavy))
+                        Text(([strategy] + extraStrategies).map(\.emoji).joined())
+                        Text(([strategy] + extraStrategies).map(\.title).joined(separator: " · ")).font(BZFont.font(extraStrategies.isEmpty ? 17 : 15, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.8)
                     }
                     Text([congestionText, route.summary].compactMap { $0 }.joined(separator: " · "))
                         .font(BZFont.small).foregroundStyle(BZColor.mute).lineLimit(1)

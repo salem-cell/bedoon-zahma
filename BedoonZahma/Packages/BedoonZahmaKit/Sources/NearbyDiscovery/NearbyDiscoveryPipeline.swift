@@ -19,9 +19,9 @@ public struct NearbySearchConfig: Codable, Hashable, Sendable {
 
     public init(
         prefilterRadiusMeters: [String: Double] = ["5": 5_000, "10": 9_000, "15": 14_000],
-        maxFanOutRequests: Int = 4,
+        maxFanOutRequests: Int = 2,
         typesPerRequest: Int = 8,
-        maxCandidates: Int = 80,
+        maxCandidates: Int = 30,
         cacheTTLSeconds: Int = 120,
         cacheGridMeters: Double = 150,
         preferRoutingSummaries: Bool = true

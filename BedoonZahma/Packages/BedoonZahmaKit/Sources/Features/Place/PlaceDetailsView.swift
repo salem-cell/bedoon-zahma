@@ -95,13 +95,12 @@ struct PlaceDetailsView: View {
                             infoCard(p)
 
                             HStack {
-                                if let g = p.googleMapsURI {
-                                    Button { openURL(g) } label: {
-                                        Label(L("place.opengoogle"), systemImage: "arrow.up.forward.square").font(BZFont.caption.weight(.bold)).foregroundStyle(BZColor.ink)
-                                    }
+                                // رابط رسمي مجاني: معرّف Google إن وُجد، وإلا بحث باسم المكان وإحداثيته.
+                                Button { openURL(p.googleMapsURI ?? GoogleMapsURLs.place(name: p.name, coordinate: p.coordinate)) } label: {
+                                    Label(L("place.opengoogle"), systemImage: "arrow.up.forward.square").font(BZFont.caption.weight(.bold)).foregroundStyle(BZColor.ink)
                                 }
                                 Spacer()
-                                GoogleAttributionView(compact: true)
+                                if p.googleMapsURI != nil { GoogleAttributionView(compact: true) }
                             }
                         }
                         .padding(20)

@@ -18,11 +18,13 @@ export const TTRoutesBody = z.object({
   languageCode: z.string().min(2).max(10).default("ar"),
   avoidTolls: z.boolean().default(false),
   maxAlternatives: z.number().int().min(0).max(5).default(3),
+  /** اتجاه المركبة (0–359) إن عُرف — يمنع اقتراح التفاف عند البداية. */
+  vehicleHeading: z.number().int().min(0).max(359).optional(),
 });
 
 export const TTMatrixBody = z.object({
   origin: Point,
-  destinations: z.array(Point).min(1).max(100),
+  destinations: z.array(Point).min(1).max(40),
 });
 
 export const TTNearbyBody = z.object({
@@ -90,6 +92,7 @@ export class TomTomClient {
       sectionType: "traffic", computeTravelTimeFor: "all",
     };
     if (body.avoidTolls) base.avoid = "tollRoads";
+    if (body.vehicleHeading != null) base.vehicleHeading = String(body.vehicleHeading);
     const [primary, shortest] = await Promise.all([
       this.call<unknown>("tt.routes", "tt.routing", this.routeUrl(body.origin, body.destination, { ...base, routeType: "fastest", maxAlternatives: String(body.maxAlternatives) })),
       this.call<unknown>("tt.routes", "tt.routing", this.routeUrl(body.origin, body.destination, { ...base, routeType: "shortest", maxAlternatives: "0" })).catch(() => null),
@@ -110,19 +113,31 @@ export class TomTomClient {
         method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
       });
     }
+    // الخطة المجانية: 5 طلبات/ثانية للمفتاح. نحافظ على تزامن 4 بفاصل ~250 مللي ثانية ونعيد المحاولة عند 429 بتراجع.
     const results: { originIndex: number; destinationIndex: number; routeSummary?: unknown }[] = [];
-    const concurrency = 8;
+    const concurrency = 4;
     let next = 0;
-    const worker = async () => {
-      while (next < body.destinations.length) {
-        const i = next++;
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const one = async (i: number) => {
+      for (let attempt = 0; attempt < 4; attempt++) {
         try {
           const r = await this.call<{ routes?: { summary?: unknown }[] }>("tt.routes.summary", "tt.routing",
             this.routeUrl(body.origin, body.destinations[i], { travelMode: "car", traffic: "true", departAt: "now", routeRepresentation: "summaryOnly", routeType: "fastest", maxAlternatives: "0" }));
-          results.push({ originIndex: 0, destinationIndex: i, routeSummary: r.routes?.[0]?.summary });
-        } catch {
-          results.push({ originIndex: 0, destinationIndex: i });
+          return r.routes?.[0]?.summary;
+        } catch (e) {
+          const status = (e as GoogleError).status;
+          if (status === 429 || status >= 500) { await sleep(300 * (attempt + 1) + Math.random() * 200); continue; }
+          return undefined;
         }
+      }
+      return undefined;
+    };
+    const worker = async () => {
+      while (next < body.destinations.length) {
+        const i = next++;
+        const routeSummary = await one(i);
+        results.push({ originIndex: 0, destinationIndex: i, routeSummary });
+        await sleep(250);
       }
     };
     await Promise.all(Array.from({ length: Math.min(concurrency, body.destinations.length) }, worker));

@@ -9,12 +9,15 @@ public struct RouteRequest: Hashable, Sendable {
     public var languageCode: String
     public var avoidTolls: Bool
     public var departureTime: Date?
-    public init(origin: Coordinate, destination: Destination, languageCode: String, avoidTolls: Bool = false, departureTime: Date? = nil) {
+    /// اتجاه حركة المركبة بالدرجات (0–359) إن كان معروفًا — يمنع اقتراح التفاف عند البداية.
+    public var headingDegrees: Int?
+    public init(origin: Coordinate, destination: Destination, languageCode: String, avoidTolls: Bool = false, departureTime: Date? = nil, headingDegrees: Int? = nil) {
         self.origin = origin
         self.destination = destination
         self.languageCode = languageCode
         self.avoidTolls = avoidTolls
         self.departureTime = departureTime
+        self.headingDegrees = headingDegrees
     }
 }
 

@@ -83,10 +83,13 @@ final class GuidanceNavigationProvider: NavigationProvider {
         cumulative = Polyline.cumulativeDistances(points)
     }
 
+    private var lastCourse: Int?
+
     private func handle(_ loc: CLLocation) {
         guard let route = activeRoute, points.count >= 2, let total = cumulative.last, total > 0 else { return }
         let here = Coordinate(latitude: loc.coordinate.latitude, longitude: loc.coordinate.longitude)
         currentLocation = here
+        if loc.course >= 0, loc.speed > 2 { lastCourse = Int(loc.course.rounded()) % 360 }
         if case .arrived = state { return }
 
         let (along, crossTrack) = project(here)
@@ -167,7 +170,7 @@ final class GuidanceNavigationProvider: NavigationProvider {
             guard let self else { return }
             defer { self.rerouting = false; self.offRouteStreak = 0 }
             do {
-                let routes = try await self.routing.computeRoutes(RouteRequest(origin: here, destination: destination, languageCode: Locale.current.language.languageCode?.identifier.hasPrefix("ar") == true ? "ar" : "en"))
+                let routes = try await self.routing.computeRoutes(RouteRequest(origin: here, destination: destination, languageCode: Locale.current.language.languageCode?.identifier.hasPrefix("ar") == true ? "ar" : "en", headingDegrees: self.lastCourse))
                 let options = await self.makeSelector().select(from: routes)
                 if let r = options.route(for: self.strategy) ?? routes.first {
                     self.apply(route: r)

@@ -57,7 +57,10 @@ describe("remote config", () => {
     const r1 = await a.inject({ method: "GET", url: "/v1/config", headers: { "x-app-key": "k1" } });
     expect(r1.statusCode).toBe(200);
     const etag = r1.headers.etag as string;
-    expect(etag).toBe(buildRemoteConfig().etag);
+    expect(etag).toMatch(/^"[0-9a-f]{16}"$/);
+    expect(r1.json().mapsProvider).toBe("tomtom");
+    expect(r1.json().nearby.maxFanOutRequests).toBe(1); // مع TomTom: طلب بحث واحد يكفي
+    expect(buildRemoteConfig().etag).toMatch(/^"[0-9a-f]{16}"$/);
     const r2 = await a.inject({ method: "GET", url: "/v1/config", headers: { "x-app-key": "k1", "if-none-match": etag } });
     expect(r2.statusCode).toBe(304);
   });

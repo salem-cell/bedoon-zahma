@@ -2353,6 +2353,22 @@
           }
         }
       }
+    },
+    "routes.googlemaps": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الملاحة عبر خرائط Google"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Navigate with Google Maps"
+          }
+        }
+      }
     }
   }
 }
