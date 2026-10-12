@@ -12,13 +12,18 @@ public enum GoogleMappers {
             guard let e = iv.endPolylinePointIndex, let sp = iv.speed.flatMap(TrafficSpeed.init(rawValue:)) else { return nil }
             return SpeedReadingInterval(startPolylinePointIndex: iv.startPolylinePointIndex ?? 0, endPolylinePointIndex: e, speed: sp)
         }
-        let steps = (g.legs ?? []).flatMap { $0.steps ?? [] }.map {
-            RouteStep(
-                instruction: $0.navigationInstruction?.instructions,
-                maneuver: $0.navigationInstruction?.maneuver.flatMap(Maneuver.init(rawValue:)),
-                distanceMeters: $0.distanceMeters ?? 0,
-                staticDurationSeconds: parseGoogleDuration($0.staticDuration)
+        // الموضع التراكمي لكل خطوة (للإرشاد الذاتي فوق MapKit عندما لا يُستخدم Navigation SDK).
+        var offset = 0
+        let steps = (g.legs ?? []).flatMap { $0.steps ?? [] }.map { s -> RouteStep in
+            let step = RouteStep(
+                instruction: s.navigationInstruction?.instructions,
+                maneuver: s.navigationInstruction?.maneuver.flatMap(Maneuver.init(rawValue:)),
+                distanceMeters: s.distanceMeters ?? 0,
+                staticDurationSeconds: parseGoogleDuration(s.staticDuration),
+                routeOffsetMeters: offset
             )
+            offset += s.distanceMeters ?? 0
+            return step
         }
         var warnings = g.warnings ?? []
         if g.travelAdvisory?.routeRestrictionsPartiallyIgnored == true { warnings.append("ROUTE_RESTRICTIONS_PARTIALLY_IGNORED") }

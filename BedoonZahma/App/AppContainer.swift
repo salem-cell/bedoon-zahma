@@ -30,8 +30,10 @@ enum AppConfig {
     }
     static var appKey: String { string("BZAppKey") ?? "" }
     static var appVersion: String { (string("CFBundleShortVersionString") ?? "0") + "+" + (string("CFBundleVersion") ?? "0") }
-    /// مزوّد البيانات: "tomtom" (مجاني؛ خريطة Apple MapKit وإرشاد ذاتي) أو "google" (Maps/Navigation SDK).
+    /// مزوّد البيانات: "tomtom" أو "google" (الطرق والأماكن عبر الخادم).
     static var mapsProvider: String { (string("BZMapsProvider") ?? "tomtom").lowercased() }
+    /// طبقة العرض والملاحة: "mapkit" (Apple MapKit + إرشاد ذاتي، بلا مفتاح على الجهاز) أو "google" (Maps SDK + Navigation SDK بمفتاح iOS).
+    static var mapRenderer: String { (string("BZMapRenderer") ?? "mapkit").lowercased() }
 
     /// Mocks مسموحة في DEBUG فقط. في Release تُتجاهل القيمة نهائيًا.
     static var useMocks: Bool {
@@ -90,14 +92,28 @@ enum AppContainer {
             )
         }
 
-        // بلا مفتاح Maps SDK (مثل بناء TestFlight قبل تفعيل Google Cloud) لا نُهيّئ Google Maps كي لا ينهار التطبيق؛
-        // تُعرض خريطة محايدة وتفشل الملاحة بخطأ واضح، وتبقى بيانات الأماكن والطرق حقيقية عبر الخادم.
+        // بيانات Google (طرق بمرور حي + أماكن بتقييمات وصور وساعات) عبر الخادم.
+        // طبقة العرض: افتراضيًا Apple MapKit + إرشاد ذاتي (لا مفتاح على الجهاز)؛ وبـ BZ_MAP_RENDERER=google مع مفتاح iOS → Maps SDK + Navigation SDK.
+        let googleRouting = GoogleRoutingProvider(api: backend)
         let hasMapsKey = !(AppConfig.googleMapsIOSKey ?? "").isEmpty
-        let navigation: NavigationProvider = hasMapsKey ? GoogleNavigationProvider() : UnavailableNavigationProvider()
-        let maps: MapSurfaces = hasMapsKey ? GoogleMapSurfaces(navigation: navigation as! GoogleNavigationProvider) : PlaceholderMapSurfaces()
+        let useGoogleRenderer = AppConfig.mapRenderer == "google" && hasMapsKey
+        let navigation: NavigationProvider
+        let maps: MapSurfaces
+        if useGoogleRenderer {
+            let g = GoogleNavigationProvider()
+            navigation = g
+            maps = GoogleMapSurfaces(navigation: g)
+        } else {
+            let guidance = GuidanceNavigationProvider(routing: googleRouting) {
+                let cfg = await remoteConfig.config
+                return RouteSelector(scorer: TrafficRouteScorer(weights: cfg.trafficWeights))
+            }
+            navigation = guidance
+            maps = MapKitMapSurfaces(navigation: guidance)
+        }
         return AppEnvironment(
             places: GooglePlacesProvider(api: backend),
-            routing: GoogleRoutingProvider(api: backend),
+            routing: googleRouting,
             travelTime: GoogleTravelTimeProvider(api: backend),
             location: LocationService(),
             analytics: analytics,

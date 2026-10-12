@@ -13,8 +13,10 @@
 | الخادم الخلفي | ✅ منشور على Vercel: `https://bedoon-zahma-backend.vercel.app` (`BZ_BACKEND_URL`, `BZ_APP_KEY` مضبوطان) |
 | سجل التطبيق في App Store Connect | ✅ أُنشئ (App ID 6820280275، SKU MISHWARAK-IOS-001) |
 | مفتاح TomTom (`TOMTOM_API_KEY` على Vercel) | ✅ مضبوط ومُختبَر (2026‑10‑08): طرق حقيقية ببدائل وأقسام مرور، 100 مقهى/طلب، بحث عربي |
-| ~~مفتاح Google Maps Platform لـ iOS~~ (اختياري الآن) (`GOOGLE_MAPS_IOS_KEY`) | ❌ من Google Cloud Console: فعّل Maps SDK for iOS وNavigation SDK وأنشئ مفتاحًا مقيّدًا بـ iOS/Bundle ID. بدونه يعمل التطبيق بخريطة محايدة وتُعطَّل الملاحة مع رسالة واضحة |
-| ~~مفتاح Google الخادمي~~ (اختياري الآن) (`GOOGLE_SERVER_API_KEY` على Vercel) | ❌ فعّل Routes API وPlaces API (New)، أنشئ مفتاحًا مقيّدًا بالـ APIs، ثم: `vercel env rm GOOGLE_SERVER_API_KEY production && printf 'AIza…' \| vercel env add GOOGLE_SERVER_API_KEY production && vercel deploy --prod` من مجلد `backend/` |
+| مفتاح Google Maps Platform لـ iOS (`GOOGLE_MAPS_IOS_KEY`) | ✅ مُنشأ ومقيّد ومخزّن في GitHub (يُستخدم عند BZ_MAP_RENDERER=google) |
+| ~~مفتاح Google Maps Platform لـ iOS~~ (`GOOGLE_MAPS_IOS_KEY`) | ❌ من Google Cloud Console: فعّل Maps SDK for iOS وNavigation SDK وأنشئ مفتاحًا مقيّدًا بـ iOS/Bundle ID. بدونه يعمل التطبيق بخريطة محايدة وتُعطَّل الملاحة مع رسالة واضحة |
+| مفتاح Google الخادمي (`GOOGLE_SERVER_API_KEY` على Vercel) | ✅ مضبوط؛ MAPS_PROVIDER=google |
+| ~~مفتاح Google الخادمي~~ (`GOOGLE_SERVER_API_KEY` على Vercel) | ❌ فعّل Routes API وPlaces API (New)، أنشئ مفتاحًا مقيّدًا بالـ APIs، ثم: `vercel env rm GOOGLE_SERVER_API_KEY production && printf 'AIza…' \| vercel env add GOOGLE_SERVER_API_KEY production && vercel deploy --prod` من مجلد `backend/` |
 
 بعد إكمال البنود الثلاثة الناقصة، شغّل **Actions → Release to TestFlight → Run workflow**.
 

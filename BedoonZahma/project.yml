@@ -60,6 +60,7 @@ targets:
         BZAppKey: $(BZ_APP_KEY)
         BZUseMocks: $(BZ_USE_MOCKS)
         BZMapsProvider: $(BZ_MAPS_PROVIDER)
+        BZMapRenderer: $(BZ_MAP_RENDERER)
     entitlements:
       path: App/BedoonZahma.entitlements
       properties: {}
