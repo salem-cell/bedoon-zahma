@@ -41,9 +41,15 @@ final class BedoonZahmaUITests: XCTestCase {
         XCTAssertTrue(goNow.waitForExistence(timeout: 8))
         goNow.tap()
         XCTAssertTrue(element("route.no_stop").waitForExistence(timeout: 10))
-        XCTAssertTrue(element("route.fastest").exists)
-        XCTAssertTrue(element("route.shortest").exists)
+        // عندما يختار المحرك المسار نفسه لأكثر من استراتيجية تُدمج في بطاقة واحدة تحمل العناوين معًا؛ نقبل الحالتين.
+        XCTAssertTrue(strategyVisible(id: "route.fastest", title: "أسرع"))
+        XCTAssertTrue(strategyVisible(id: "route.shortest", title: "أقصر"))
         XCTAssertTrue(element("routes.start").exists)
+    }
+
+    private func strategyVisible(id: String, title: String) -> Bool {
+        if element(id).exists { return true }
+        return ["route.no_stop", "route.fastest", "route.shortest"].contains { element($0).exists && element($0).label.contains(title) }
     }
 
     func testSearchFlowShowsThreeRouteOptionsAndStartsNavigation() {

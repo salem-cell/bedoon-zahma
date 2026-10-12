@@ -108,12 +108,12 @@ public struct MockRoutingProvider: RoutingProvider {
         let midB = Coordinate(latitude: (o.latitude + d.latitude) / 2, longitude: (o.longitude + d.longitude) / 2)
         let midC = Coordinate(latitude: (o.latitude + d.latitude) / 2 - 0.006, longitude: (o.longitude + d.longitude) / 2 + 0.004)
 
-        // A: أطول لكن انسيابي — B: الأسرع بزحمة متوسطة — C: الأقصر بزحمة مرتفعة.
-        let a = RouteModel(id: "dev-a", labels: [.defaultRouteAlternate], distanceMeters: Int(base * 1.33), durationSeconds: Int(base / 13.9) + 60, staticDurationSeconds: Int(base / 13.9),
+        // A: أطول لكن انسيابي (أبطأ قليلًا من B دائمًا كي تبقى البطاقات الثلاث متمايزة في العرض التجريبي) — B: الأسرع بزحمة متوسطة — C: الأقصر بزحمة مرتفعة.
+        let a = RouteModel(id: "dev-a", labels: [.defaultRouteAlternate], distanceMeters: Int(base * 1.33), durationSeconds: Int(base * 1.33 / 13.9) + 240, staticDurationSeconds: Int(base * 1.33 / 13.9),
                            encodedPolyline: line([midA]), speedReadingIntervals: [.init(startPolylinePointIndex: 0, endPolylinePointIndex: 2, speed: .normal)],
                            steps: Array(repeating: RouteStep(instruction: "انعطف", maneuver: .turnRight, distanceMeters: 800, staticDurationSeconds: 60), count: 6),
                            summary: "النخيل ← العقيق ← حطين", routeToken: nil)
-        let b = RouteModel(id: "dev-b", labels: [.defaultRoute], distanceMeters: Int(base), durationSeconds: Int(base / 13.9) + 300, staticDurationSeconds: Int(base / 13.9) - 100,
+        let b = RouteModel(id: "dev-b", labels: [.defaultRoute], distanceMeters: Int(base), durationSeconds: Int(base / 13.9) + 150, staticDurationSeconds: Int(base / 13.9) - 100,
                            encodedPolyline: line([midB]), speedReadingIntervals: [.init(startPolylinePointIndex: 0, endPolylinePointIndex: 1, speed: .slow), .init(startPolylinePointIndex: 1, endPolylinePointIndex: 2, speed: .normal)],
                            steps: Array(repeating: RouteStep(instruction: "انعطف", maneuver: .turnLeft, distanceMeters: 1000, staticDurationSeconds: 70), count: 4),
                            summary: "الملقا ← حطين", routeToken: nil)
