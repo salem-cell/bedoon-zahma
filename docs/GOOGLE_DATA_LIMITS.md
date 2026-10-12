@@ -43,9 +43,19 @@
 | `searchNearby` مع `routingSummaries` (20 نتيجة/طلب) | ✅ |
 | `rating`, `userRatingCount`, `priceLevel`, `currentOpeningHours`, `regularOpeningHours`, `businessStatus` | ✅ |
 | الإكمال التلقائي | ✅ |
-| `photos[]` في البحث القريب والتفاصيل | ❌ لا يُعاد الحقل إطلاقًا → تُعرض خلفية بديلة (`PlacePhotoView`) ولا يُطلب `/media` |
+| `photos[]` و`reviews[]` في البحث القريب والتفاصيل | ❌ لا يُعاد الحقلان إطلاقًا (محتوى المستخدمين محجوب بلا فوترة) |
 
-عند تفعيل الفوترة لاحقًا (عبر الموزّع المعتمد في السعودية) تعود الصور تلقائيًا دون تغيير في الكود.
+### خط الصور (جاهز ويعمل تلقائيًا عند تفعيل الفوترة)
+
+ثلاث طبقات حقيقية بالترتيب، في `Features/Shared/PlaceViews.swift`:
+
+1. **صورة Google Place** عبر `/v1/places/photo` (إعادة توجيه 302 إلى `/media`، `Cache-Control: no-store`)، تحميل بـ `PlaceImageLoader` (ذاكرة فقط، لا قرص — التزامًا بشروط Google)، مع إسناد المصوّر على الصورة وفي العارض.
+2. **Apple Look Around** (`LookAroundCover.swift`): مشهد شارع حقيقي لإحداثية المكان عبر `MKLookAroundSceneRequest` + `MKLookAroundSnapshotter` — مجاني وأصلي؛ التغطية غير مضمونة في السعودية فيُعاد nil بهدوء.
+3. **أيقونة الفئة** (مقهى/حلويات/مطعم) على خلفية مخططة — لا صورة لا تخص المكان أبدًا.
+
+عارض بملء الشاشة (`PhotoGalleryViewer`): تمرير، تكبير بالقرص ونقرتين، عدّاد، إسناد المصوّر برابطه، إغلاق بالسحب.
+
+**تفعيل الفوترة في السعودية:** حصريًا عبر بوابة CNTXT (cloud.cntxt.com) بحساب Google Workspace أو Cloud Identity وبطاقة Visa/Mastercard/مدى، ثم ربط المشروع `mishwarak-ashal-ios` بحساب الفوترة من Cloud Console. بعدها تعود `photos[]` من Google دون أي تغيير في الكود.
 
 ## سياسات التخزين والإسناد (ملتزم بها في الكود)
 

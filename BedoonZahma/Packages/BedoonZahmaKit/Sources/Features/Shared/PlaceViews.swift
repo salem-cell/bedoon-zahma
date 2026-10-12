@@ -2,24 +2,24 @@ import DesignSystem
 import Domain
 import SwiftUI
 
-/// صورة Google Place عبر الخادم (بلا تخزين دائم). بديل مخطط عند الغياب.
+/// صورة مكان بثلاث طبقات حقيقية، بالترتيب:
+/// 1) صورة المزوّد (Google Place Photos عبر الخادم، بلا تخزين على القرص) مع إسناد المصوّر.
+/// 2) عند غيابها أو فشلها: مشهد شارع حقيقي من Apple Look Around لموقع المكان (إن توفرت التغطية).
+/// 3) وإلا: بديل مخطط بأيقونة الفئة — لا نعرض صورة لا تخص المكان أبدًا.
 struct PlacePhotoView: View {
     var photo: PhotoReference?
     var maxWidthPx: Int
     var height: CGFloat
     var showAttribution: Bool = true
+    /// يفعّل طبقتَي البديل (Look Around وأيقونة الفئة) بمعلومات المكان.
+    var fallback: PlacePhotoFallback? = nil
     @Environment(\.appEnv) private var env
+    @State private var providerFailed = false
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            placeholder
-            if let photo, let url = env?.places.photoURL(for: photo, maxWidthPx: maxWidthPx) {
-                AsyncImage(url: url, transaction: Transaction(animation: .easeOut(duration: 0.2))) { phase in
-                    switch phase {
-                    case .success(let img): img.resizable().scaledToFill().transition(.opacity)
-                    default: Color.clear
-                    }
-                }
+            if let photo, !providerFailed, let url = env?.places.photoURL(for: photo, maxWidthPx: maxWidthPx) {
+                RemoteImage(url: url, onFailure: { providerFailed = true }) { secondary }
                 if showAttribution, let a = photo.authorAttributions.first {
                     Text(a.displayName)
                         .font(.system(size: 10, weight: .medium))
@@ -29,17 +29,51 @@ struct PlacePhotoView: View {
                         .padding(8)
                         .accessibilityLabel(L("photo.by", a.displayName))
                 }
+            } else {
+                secondary
             }
         }
         .frame(height: height)
         .clipped()
     }
 
-    private var placeholder: some View {
+    @ViewBuilder private var secondary: some View {
+        if let fallback {
+            LookAroundCoverView(placeID: fallback.placeID, coordinate: fallback.coordinate, size: CGSize(width: CGFloat(maxWidthPx) / 2, height: height), showBadge: showAttribution) {
+                placeholder(icon: fallback.icon)
+            }
+        } else {
+            placeholder(icon: "photo")
+        }
+    }
+
+    private func placeholder(icon: String) -> some View {
         ZStack {
             LinearGradient(colors: [Color(hex: 0xE4E7E5), Color(hex: 0xECEFED)], startPoint: .topLeading, endPoint: .bottomTrailing)
-            Image(systemName: "photo").font(.system(size: 26)).foregroundStyle(BZColor.mute.opacity(0.6))
+            Image(systemName: icon).font(.system(size: 26)).foregroundStyle(BZColor.mute.opacity(0.6))
         }
+    }
+}
+
+/// بيانات البديل الحقيقي لصورة المكان.
+struct PlacePhotoFallback {
+    var placeID: String
+    var coordinate: Coordinate
+    var icon: String
+
+    init(place: NearbyPlace) {
+        placeID = place.placeID
+        coordinate = place.coordinate
+        icon = PlacePhotoFallback.icon(for: place)
+    }
+
+    /// أيقونة الفئة من primaryType/types فقط.
+    static func icon(for place: NearbyPlace) -> String {
+        let all = ([place.primaryType].compactMap { $0 } + place.types)
+        if all.contains(where: { $0.contains("cafe") || $0.contains("coffee") || $0.contains("tea_house") }) { return "cup.and.saucer.fill" }
+        if all.contains(where: { $0.contains("bakery") || $0.contains("dessert") || $0.contains("ice_cream") }) { return "birthday.cake.fill" }
+        if all.contains(where: { $0.contains("restaurant") || $0.contains("food") || $0.contains("steak") }) { return "fork.knife" }
+        return "mappin.and.ellipse"
     }
 }
 
@@ -54,7 +88,7 @@ struct PlaceCardView: View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 0) {
                 ZStack(alignment: .topLeading) {
-                    PlacePhotoView(photo: place.coverPhoto, maxWidthPx: 800, height: 170)
+                    PlacePhotoView(photo: place.coverPhoto, maxWidthPx: 800, height: 170, fallback: PlacePhotoFallback(place: place))
                     HStack {
                         Button(action: onFavorite) {
                             Image(systemName: isFavorite ? "heart.fill" : "heart")
@@ -127,7 +161,7 @@ struct PlaceMiniCard: View {
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 12) {
-                PlacePhotoView(photo: place.coverPhoto, maxWidthPx: 200, height: 70, showAttribution: false)
+                PlacePhotoView(photo: place.coverPhoto, maxWidthPx: 200, height: 70, showAttribution: false, fallback: PlacePhotoFallback(place: place))
                     .frame(width: 70).clipShape(RoundedRectangle(cornerRadius: 12))
                 VStack(alignment: .leading, spacing: 4) {
                     Text(place.name).font(BZFont.body.weight(.heavy)).lineLimit(1)

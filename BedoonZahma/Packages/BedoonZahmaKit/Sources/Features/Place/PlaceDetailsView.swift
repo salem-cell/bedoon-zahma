@@ -12,6 +12,7 @@ final class PlaceDetailsViewModel {
     var isLoading = true
     var error: AppError?
     var galleryIndex = 0
+    var showGallery = false
     private var env: AppEnvironment?
 
     init(placeID: String, kindID: String) { self.placeID = placeID; self.kindID = kindID }
@@ -147,15 +148,28 @@ struct PlaceDetailsView: View {
         ZStack(alignment: .top) {
             let photos = vm.place?.photos ?? []
             if photos.isEmpty {
-                PlacePhotoView(photo: nil, maxWidthPx: 1200, height: 300)
+                // بلا صور من المزوّد: مشهد شارع حقيقي من Apple Look Around إن توفر، وإلا أيقونة الفئة.
+                PlacePhotoView(photo: nil, maxWidthPx: 1200, height: 300, fallback: vm.place.map(PlacePhotoFallback.init(place:)))
             } else {
-                TabView(selection: $vm.galleryIndex) {
-                    ForEach(Array(photos.prefix(8).enumerated()), id: \.offset) { i, ph in
-                        PlacePhotoView(photo: ph, maxWidthPx: 1200, height: 300).tag(i)
+                ZStack(alignment: .bottomTrailing) {
+                    TabView(selection: $vm.galleryIndex) {
+                        ForEach(Array(photos.prefix(10).enumerated()), id: \.offset) { i, ph in
+                            PlacePhotoView(photo: ph, maxWidthPx: 1200, height: 300, fallback: vm.place.map(PlacePhotoFallback.init(place:))).tag(i)
+                        }
                     }
+                    .bzPagedTabs()
+                    .frame(height: 300)
+                    .onTapGesture { vm.showGallery = true }
+                    .accessibilityIdentifier("place.gallery")
+                    Text(L("photo.counter", vm.galleryIndex + 1, min(photos.count, 10)))
+                        .font(.system(size: 11, weight: .bold)).foregroundStyle(.white)
+                        .padding(.horizontal, 10).padding(.vertical, 5).background(.black.opacity(0.45), in: Capsule())
+                        .padding(12)
+                        .allowsHitTesting(false)
                 }
-                .bzPagedTabs()
-                .frame(height: 300)
+                .fullScreenCover(isPresented: $vm.showGallery) {
+                    PhotoGalleryViewer(photos: Array(photos.prefix(10)), index: $vm.galleryIndex) { vm.showGallery = false }
+                }
             }
             HStack {
                 RoundIconButton("arrow.forward") { router.pop() }
