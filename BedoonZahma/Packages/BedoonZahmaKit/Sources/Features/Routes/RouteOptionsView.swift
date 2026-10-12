@@ -190,7 +190,8 @@ struct RouteCard: View {
             .foregroundStyle(BZColor.ink)
         }
         .buttonStyle(PressableStyle())
-        .accessibilityLabel("\(strategy.title)، \(route.durationMinutes) \(L("unit.minute"))، \(L("unit.km.value", route.distanceKm))")
+        // تُذكر كل الاستراتيجيات المدمجة في البطاقة كي يسمعها VoiceOver (وتعتمد عليها اختبارات الواجهة).
+        .accessibilityLabel("\(([strategy] + extraStrategies).map(\.title).joined(separator: " · "))، \(route.durationMinutes) \(L("unit.minute"))، \(L("unit.km.value", route.distanceKm))")
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
