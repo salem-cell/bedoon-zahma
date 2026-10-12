@@ -52,7 +52,7 @@ certutil -encode AuthKey_XXXXXXXXXX.p8 key.b64.txt
 ## 3) التشغيل
 من تبويب **Actions → Release to TestFlight → Run workflow**. يأخذ 15 إلى 30 دقيقة. التوقيع سحابي تلقائي (Xcode Managed) عبر مفتاح API، فلا حاجة لشهادات أو ملفات تزويد يدوية.
 
-بعد الرفع يظهر البناء في **TestFlight** خلال دقائق لمعالجة Apple. مجموعة داخلية باسم **Internal** (تصل لكل البناءات تلقائيًا) أُنشئت وأُضيف إليها أعضاء الفريق: dafaat.ksa@gmail.com، flysmh@yahoo.com، mr.hussein.5566@gmail.com. ثبّت تطبيق TestFlight على iPhone بنفس Apple ID وستجد «مشوارك أسهل».
+بعد الرفع يظهر البناء في **TestFlight** خلال دقائق لمعالجة Apple. مجموعة داخلية باسم **Internal** (تصل لكل البناءات تلقائيًا) أُنشئت وأُضيف إليها أعضاء الفريق: <بريد المختبِر>، <بريد المختبِر>، <بريد المختبِر>. ثبّت تطبيق TestFlight على iPhone بنفس Apple ID وستجد «مشوارك أسهل».
 
 ## 4) الخادم الخلفي
 انشر `backend/` (Docker/Cloud Run) قبل أول بناء إنتاجي، وضع رابطه في `BZ_BACKEND_URL`. بلا خادم لا يُقلع بناء Release (مقصود: لا بيانات وهمية في الإنتاج).
